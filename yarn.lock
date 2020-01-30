@@ -5086,6 +5086,14 @@ react-native-blockstack@^0.4.6:
   resolved "https://registry.yarnpkg.com/react-native-blockstack/-/react-native-blockstack-0.4.6.tgz#6ae0604dbb8871d88f1e3383ea76143cc7dd2769"
   integrity sha512-kwpBwEtnPl15JTP5QcacULL6Dbt3X1ZEhS6Lt4hTVCWPKNG42+5dMS3Ajliud10nvq6CR3ajU+Jqbk2qTfKG/Q==
 
+react-native-color-picker@^0.4.6:
+  version "0.4.6"
+  resolved "https://registry.yarnpkg.com/react-native-color-picker/-/react-native-color-picker-0.4.6.tgz#ae773ada067e80407cdcb931b606f3d6fdaa61f5"
+  integrity sha512-Uya/ZvAkBQoFtQS+sHMxzzRdPTCTkvsGWj+xCeVKARBuqWfvKp8Zfu1JkJ0+BPQ5mvHkWByQuDeAy3VD8BKBsg==
+  dependencies:
+    prop-types "^15.5.10"
+    tinycolor2 "^1.4.1"
+
 react-native-draggable-flatlist@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/react-native-draggable-flatlist/-/react-native-draggable-flatlist-2.1.2.tgz#ea66d2757087f21f2d3a2ad86bfa28521dadfbd8"
@@ -6076,6 +6084,11 @@ time-stamp@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/time-stamp/-/time-stamp-1.1.0.tgz#764a5a11af50561921b133f3b44e618687e0f5c3"
   integrity sha1-dkpaEa9QVhkhsTPztE5hhofg9cM=
+
+tinycolor2@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/tinycolor2/-/tinycolor2-1.4.1.tgz#f4fad333447bc0b07d4dc8e9209d8f39a8ac77e8"
+  integrity sha1-9PrTM0R7wLB9TcjpIJ2POaisd+g=
 
 tmp@^0.0.33:
   version "0.0.33"

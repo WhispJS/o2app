@@ -8,7 +8,6 @@ import {
   general,
   buttonStyles,
   containerStyles,
-  defaultSettings,
 } from '../config/style';
 import Page from '../components/Page/Page';
 import {
@@ -18,8 +17,8 @@ import {
 import {useSelector, useDispatch} from 'react-redux';
 import {Icon} from 'react-native-elements';
 import {saveTheme, saveSettings} from '../store/themes/themes.actions';
-import SortableList from '../components/SortableList/SortableList';
 import DraggableFlatList from 'react-native-draggable-flatlist';
+import {ColorPicker, TriangleColorPicker} from 'react-native-color-picker';
 
 const SettingsPage = () => {
   const currentTheme = useSelector(getCurrentTheme);
@@ -94,7 +93,7 @@ const SettingsPage = () => {
         </View>
         <View>
           <Text style={textStyles(currentTheme).general}>Menu Order</Text>
-          <View style={{height: 500}}>
+          <View style={{height: 250}}>
             <DraggableFlatList
               data={currentSettings.menu}
               renderItem={({item, index, drag, isActive}) => (
@@ -117,6 +116,7 @@ const SettingsPage = () => {
               onDragEnd={({data}) => updateSettings(settingsFields.menu, data)}
             />
           </View>
+          <TriangleColorPicker style={{height: 200}} />
         </View>
       </Page>
     </>
