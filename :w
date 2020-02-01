@@ -1,10 +1,9 @@
 import {StyleSheet} from 'react-native';
 
 export const general = {
-  menuButtonSize: 25,
+  menuButtonSize: 20,
   settingsIconSize: 20,
   clockIconSize: 30,
-  cardIconSize: 20,
 };
 
 export const icons = {
@@ -18,12 +17,6 @@ export const icons = {
   neutral: 'chevron-down',
   rightHanded: 'chevron-right',
   home: 'home',
-  share: 'share-alt',
-  copy: 'copy',
-  edit: 'pencil',
-  add: 'plus',
-  back: 'arrow-up',
-  forward: 'arrow-down',
 };
 
 export const menuStyles = {
@@ -52,7 +45,6 @@ export const themeFields = {
     note: 'note',
     event: 'event',
     task: 'task',
-    other: 'other',
     general: 'general',
   },
   styles: {
@@ -65,24 +57,20 @@ export const defaultTheme = {
   name: 'Default',
   colors: {
     [themeFields.items.general]: {
-      [themeFields.styles.secondaryColor]: '#4D4D4D',
-      [themeFields.styles.mainColor]: '#E3E3E3',
+      [themeFields.styles.secondaryColor]: '#2c2c2c',
+      [themeFields.styles.mainColor]: 'white',
     },
-    [themeFields.items.note]: {
-      [themeFields.styles.mainColor]: '#0E8BFB',
-      [themeFields.styles.secondaryColor]: '#5DB2FF',
+    note: {
+      [themeFields.styles.secondaryColor]: '#0099FF',
+      [themeFields.styles.mainColor]: '#0099FF',
     },
-    [themeFields.items.event]: {
-      [themeFields.styles.mainColor]: '#FF4F00',
-      [themeFields.styles.secondaryColor]: '#FF8750',
+    event: {
+      [themeFields.styles.secondaryColor]: '#FFFD00',
+      [themeFields.styles.mainColor]: '#FFFD00',
     },
-    [themeFields.items.task]: {
-      [themeFields.styles.mainColor]: '#FFC200',
-      [themeFields.styles.secondaryColor]: '#FFD550',
-    },
-    [themeFields.items.other]: {
-      [themeFields.styles.mainColor]: '#5B5A59',
-      [themeFields.styles.secondaryColor]: '#8B8B8B',
+    task: {
+      [themeFields.styles.secondaryColor]: '#CC1614',
+      [themeFields.styles.mainColor]: '#CC1614',
     },
   },
 };
@@ -90,11 +78,11 @@ export const defaultTheme = {
 export const defaultSettings = {
   [settingsFields.menuStyle]: menuStyles.rightHanded,
   [settingsFields.menu]: [
-    {key: 'note', theme: 'note'},
-    {key: 'task', theme: 'task'},
-    {key: 'event', theme: 'event'},
-    {key: 'settings', theme: 'other'},
-    {key: 'profile', theme: 'other'},
+    {key: 'note'},
+    {key: 'task'},
+    {key: 'event'},
+    {key: 'settings'},
+    {key: 'profile'},
   ],
   [settingsFields.timeZone]: 'GMT+1',
   [settingsFields.timeFormat]: timeFormats.twentyfourHours,
@@ -124,8 +112,7 @@ export const containerStyles = (settings, theme) =>
     main: {
       flex: settings.menuStyle === menuStyles.neutral ? 9 : 4,
       paddingLeft: settings.menuStyle === menuStyles.leftHanded ? 15 : 0,
-      paddingRight: settings.menuStyle === menuStyles.rightHanded ? 15 : 0,
-      paddingBottom: settings.menuStyle === menuStyles.neutral ? 15 : 0,
+      paddingRight: settings.menuStyle === menuStyles.leftHanded ? 15 : 0,
     },
     clock: {
       flexDirection: 'row',
@@ -152,6 +139,20 @@ export const containerStyles = (settings, theme) =>
     clockInfo: {
       flex: 2,
     },
+    menu: {
+      borderWidth: 1,
+      borderStyle: 'solid',
+      borderColor:
+        theme.colors[themeFields.items.general][themeFields.styles.mainColor],
+      borderRadius: 10,
+    },
+    innerMenu: {
+      flex: 1,
+      justifyContent:
+        settings[settingsFields.menuStyle] === menuStyles.neutral
+          ? 'space-around'
+          : 'center',
+    },
     settingsFlatList: {
       flex: 1,
       justifyContent: 'space-around',
@@ -160,25 +161,44 @@ export const containerStyles = (settings, theme) =>
 
 export const buttonStyles = theme =>
   StyleSheet.create({
+    menu: {
+      color:
+        theme.colors[themeFields.items.general][
+          themeFields.styles.secondaryColor
+        ],
+      borderRadius: 200,
+      borderStyle: 'solid',
+      borderWidth: 2,
+      padding: 15,
+      margin: 10,
+    },
     note: {
       backgroundColor:
         theme.colors[themeFields.items.note][themeFields.styles.secondaryColor],
+      borderColor:
+        theme.colors[themeFields.items.note][themeFields.styles.mainColor],
     },
     task: {
       backgroundColor:
         theme.colors[themeFields.items.task][themeFields.styles.secondaryColor],
+      borderColor:
+        theme.colors[themeFields.items.task][themeFields.styles.mainColor],
     },
     event: {
       backgroundColor:
         theme.colors[themeFields.items.event][
           themeFields.styles.secondaryColor
         ],
+      borderColor:
+        theme.colors[themeFields.items.event][themeFields.styles.mainColor],
     },
     profile: {
       backgroundColor: '#a6a6a6',
+      borderColor: '#a6a6a6',
     },
     settings: {
       backgroundColor: '#a6a6a6',
+      borderColor: '#a6a6a6',
     },
     settingsItem: {
       padding: 10,

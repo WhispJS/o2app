@@ -1,12 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { Text, FlatList, TouchableOpacity, Button } from "react-native";
-import { containerStyles, textStyles } from "../config/style";
-import Page from "../components/Page/Page";
-import { useSelector } from "react-redux";
+import React, {useEffect, useState} from 'react';
+import {
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Button,
+  StyleSheet,
+} from 'react-native';
+import {containerStyles, textStyles, themeFields} from '../config/style';
+import Page from '../components/Page/Page';
+import {useSelector} from 'react-redux';
 import {
   getCurrentTheme,
-  getCurrentSettings
-} from "../store/themes/themes.selectors";
+  getCurrentSettings,
+} from '../store/themes/themes.selectors';
+import Card from '../components/Card/Card';
 
 const Main = () => {
   const currentTheme = useSelector(getCurrentTheme);
@@ -15,31 +22,28 @@ const Main = () => {
     <Page theme={currentTheme}>
       <FlatList
         data={[
-          { key: "note", type: "note", data: [] },
-          { key: "task", type: "task", data: ["first task", "second task"] },
-          { key: "event", type: "event", data: ["event"] }
+          {key: 'note', type: themeFields.items.note, data: []},
+          {
+            key: 'task',
+            type: themeFields.items.task,
+            data: ['first task', 'second task'],
+          },
+          {key: 'event', type: themeFields.items.event, data: ['event']},
         ]}
+        contentContainerStyle={mainPageStyle.content}
         typeExtractor={item => item.type}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={[
-              containerStyles(currentSettings, currentTheme).data,
-              containerStyles(currentSettings, currentTheme)[item.type]
-            ]}
-          >
-            <Text
-              style={[
-                textStyles(currentTheme).general,
-                textStyles(currentTheme)[item.type]
-              ]}
-            >
-              {item.data.length
+        renderItem={({item}) => (
+          <Card
+            type={item.type}
+            title={
+              item.data.length
                 ? `${item.data.length} ${item.type}${
-                    item.data.length > 1 ? "s" : ""
+                    item.data.length > 1 ? 's' : ''
                   }`
-                : noDataText[item.type]}
-            </Text>
-          </TouchableOpacity>
+                : noDataText[item.type]
+            }
+            content={'test'}
+          />
         )}
       />
     </Page>
@@ -47,9 +51,14 @@ const Main = () => {
 };
 
 const noDataText = {
-  note: "No note",
-  event: "No event",
-  task: "No task"
+  note: 'No note',
+  event: 'No event',
+  task: 'No task',
 };
-
+const mainPageStyle = StyleSheet.create({
+  content: {
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+  },
+});
 export default Main;
