@@ -8,17 +8,19 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Icon} from 'react-native-elements';
 import Color from 'color';
 
-const Card = ({type, title, content}) => {
+const Card = ({type, title, children}) => {
   const actions = [{key: 'share'}, {key: 'copy'}, {key: 'edit'}, {key: 'add'}];
   const currentTheme = useSelector(getCurrentTheme);
   return (
     <View style={cardStyle(currentTheme, type).container}>
       <View style={cardStyle(currentTheme, type).main}>
         <View style={cardStyle(currentTheme, type).title}>
-          <Text>{title}</Text>
+          <Text style={cardStyle(currentTheme, type).titleText}>{title}</Text>
         </View>
         <View style={cardStyle(currentTheme, type).content}>
-          <Text>{content}</Text>
+          <Text style={cardStyle(currentTheme, type).contentText}>
+            {children}
+          </Text>
         </View>
         <View style={cardStyle(currentTheme, type).actions}>
           <FlatList
@@ -35,9 +37,9 @@ const Card = ({type, title, content}) => {
                   name={icons[item.key]}
                   type={icons.type}
                   size={general.cardIconSize}
-                  color={Color(currentTheme.colors[type].mainColor)
-                    .darken(0.5)
-                    .hex()}
+                  color={
+                    currentTheme.colors[type][themeFields.styles.secondaryColor]
+                  }
                 />
               </TouchableOpacity>
             )}
@@ -58,9 +60,11 @@ const Card = ({type, title, content}) => {
                 name={icons[item.key]}
                 type={icons.type}
                 size={general.cardIconSize}
-                color={Color(currentTheme.colors[type].mainColor)
-                  .darken(0.5)
-                  .hex()}
+                color={
+                  currentTheme.colors[themeFields.items.general][
+                    themeFields.styles.secondaryColor
+                  ]
+                }
               />
             </TouchableOpacity>
           )}
@@ -90,6 +94,12 @@ const cardStyle = (theme, type) => {
       borderTopLeftRadius: borderRadius,
       backgroundColor: theme.colors[type][themeFields.styles.mainColor],
     },
+    titleText: {
+      color: theme.colors[type][themeFields.styles.secondaryColor],
+    },
+    contentText: {
+      color: theme.colors[type][themeFields.styles.secondaryColor],
+    },
     content: {
       padding: 5,
       backgroundColor: Color(
@@ -111,12 +121,14 @@ const cardStyle = (theme, type) => {
       padding: 8,
       paddingLeft: 30,
       paddingRight: 30,
+      borderColor: theme.colors[type][themeFields.styles.secondaryColor],
     },
     // Navigation content
     navigation: {
       flex: 1,
       justifyContent: 'center',
-      backgroundColor: theme.colors[type][themeFields.styles.secondaryColor],
+      backgroundColor:
+        theme.colors[themeFields.items.general][themeFields.styles.mainColor],
       borderTopRightRadius: borderRadius,
       borderBottomRightRadius: borderRadius,
     },

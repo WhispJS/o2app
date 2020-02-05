@@ -2,7 +2,7 @@ import {StyleSheet} from 'react-native';
 
 export const general = {
   menuButtonSize: 25,
-  settingsIconSize: 20,
+  settingsIconSize: 25,
   clockIconSize: 30,
   cardIconSize: 20,
 };
@@ -20,7 +20,7 @@ export const icons = {
   home: 'home',
   share: 'share-alt',
   copy: 'copy',
-  edit: 'pencil',
+  edit: 'wrench',
   add: 'plus',
   back: 'arrow-up',
   forward: 'arrow-down',
@@ -41,6 +41,7 @@ export const timeFormats = {
 export const settingsFields = {
   menuStyle: 'menuStyle',
   menu: 'menu',
+  cardOrder: 'cardOrder',
   timeZone: 'timeZone',
   timeFormat: 'timeFormat',
 };
@@ -56,8 +57,8 @@ export const themeFields = {
     general: 'general',
   },
   styles: {
-    secondaryColor: 'secondaryColor',
-    mainColor: 'mainColor',
+    mainColor: 'main',
+    secondaryColor: 'secondary',
   },
 };
 
@@ -66,19 +67,19 @@ export const defaultTheme = {
   colors: {
     [themeFields.items.general]: {
       [themeFields.styles.secondaryColor]: '#4D4D4D',
-      [themeFields.styles.mainColor]: '#E3E3E3',
+      [themeFields.styles.mainColor]: '#0E8BFB',
     },
     [themeFields.items.note]: {
-      [themeFields.styles.mainColor]: '#0E8BFB',
+      [themeFields.styles.mainColor]: '#E3E3E3',
       [themeFields.styles.secondaryColor]: '#5DB2FF',
     },
     [themeFields.items.event]: {
-      [themeFields.styles.mainColor]: '#FF4F00',
+      [themeFields.styles.mainColor]: '#E3E3E3',
       [themeFields.styles.secondaryColor]: '#FF8750',
     },
     [themeFields.items.task]: {
-      [themeFields.styles.mainColor]: '#FFC200',
-      [themeFields.styles.secondaryColor]: '#FFD550',
+      [themeFields.styles.mainColor]: '#E3E3E3',
+      [themeFields.styles.secondaryColor]: '#709C34',
     },
     [themeFields.items.other]: {
       [themeFields.styles.mainColor]: '#5B5A59',
@@ -95,6 +96,11 @@ export const defaultSettings = {
     {key: 'event', theme: 'event'},
     {key: 'settings', theme: 'other'},
     {key: 'profile', theme: 'other'},
+  ],
+  [settingsFields.cardOrder]: [
+    {key: 'note', theme: 'note'},
+    {key: 'task', theme: 'task'},
+    {key: 'event', theme: 'event'},
   ],
   [settingsFields.timeZone]: 'GMT+1',
   [settingsFields.timeFormat]: timeFormats.twentyfourHours,
@@ -162,17 +168,15 @@ export const buttonStyles = theme =>
   StyleSheet.create({
     note: {
       backgroundColor:
-        theme.colors[themeFields.items.note][themeFields.styles.secondaryColor],
+        theme.colors[themeFields.items.note][themeFields.styles.mainColor],
     },
     task: {
       backgroundColor:
-        theme.colors[themeFields.items.task][themeFields.styles.secondaryColor],
+        theme.colors[themeFields.items.task][themeFields.styles.mainColor],
     },
     event: {
       backgroundColor:
-        theme.colors[themeFields.items.event][
-          themeFields.styles.secondaryColor
-        ],
+        theme.colors[themeFields.items.event][themeFields.styles.mainColor],
     },
     profile: {
       backgroundColor: '#a6a6a6',

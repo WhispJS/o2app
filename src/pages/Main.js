@@ -6,7 +6,12 @@ import {
   Button,
   StyleSheet,
 } from 'react-native';
-import {containerStyles, textStyles, themeFields} from '../config/style';
+import {
+  containerStyles,
+  textStyles,
+  themeFields,
+  settingsFields,
+} from '../config/style';
 import Page from '../components/Page/Page';
 import {useSelector} from 'react-redux';
 import {
@@ -15,21 +20,27 @@ import {
 } from '../store/themes/themes.selectors';
 import Card from '../components/Card/Card';
 
+const fakeData = [
+  {type: 'task', data: ['task one', 'task two']},
+  {type: 'note', data: ['first note']},
+];
+
 const Main = () => {
   const currentTheme = useSelector(getCurrentTheme);
   const currentSettings = useSelector(getCurrentSettings);
+
+  const reOrderData = (order, data) => {
+    return order.map(item => ({
+      key: item.key,
+      type: item.key,
+      data: data.filter(elem => elem.type === item.key).map(elem => elem.data),
+    }));
+  };
+
   return (
     <Page theme={currentTheme}>
       <FlatList
-        data={[
-          {key: 'note', type: themeFields.items.note, data: []},
-          {
-            key: 'task',
-            type: themeFields.items.task,
-            data: ['first task', 'second task'],
-          },
-          {key: 'event', type: themeFields.items.event, data: ['event']},
-        ]}
+        data={reOrderData(currentSettings.cardOrder, fakeData)}
         contentContainerStyle={mainPageStyle.content}
         typeExtractor={item => item.type}
         renderItem={({item}) => (
@@ -41,9 +52,9 @@ const Main = () => {
                     item.data.length > 1 ? 's' : ''
                   }`
                 : noDataText[item.type]
-            }
-            content={'test'}
-          />
+            }>
+            {item.data && <Text>{item.data[0]}</Text>}
+          </Card>
         )}
       />
     </Page>

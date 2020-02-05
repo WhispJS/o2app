@@ -51,9 +51,11 @@ const Menu = () => {
               name={icons[item.key]}
               type={icons.type}
               size={general.menuButtonSize}
-              color={Color(currentTheme.colors[item.theme].mainColor)
-                .darken(0.5)
-                .hex()}
+              color={
+                currentTheme.colors[item.theme][
+                  themeFields.styles.secondaryColor
+                ]
+              }
             />
           </TouchableOpacity>
         )}
@@ -82,7 +84,7 @@ const menuStyle = (theme, settings, type) => {
       borderRadius: 200,
       padding: 15,
       margin: 10,
-      backgroundColor: theme.colors[type][themeFields.styles.secondaryColor],
+      backgroundColor: theme.colors[type][themeFields.styles.mainColor],
     },
   });
 };

@@ -1,16 +1,14 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View, FlatList, TouchableOpacity, Picker} from 'react-native';
+import {Text, Picker, StyleSheet, TouchableOpacity} from 'react-native';
 import {
   textStyles,
-  menuStyles,
-  settingsFields,
-  icons,
-  general,
-  buttonStyles,
-  containerStyles,
   defaultTheme,
-  themeFields,
+  settingsFields,
+  menuStyles,
+  icons,
   timeFormats,
+  themeFields,
+  general,
 } from '../config/style';
 import Page from '../components/Page/Page';
 import {
@@ -19,18 +17,34 @@ import {
   getLoadedThemes,
 } from '../store/themes/themes.selectors';
 import {useSelector, useDispatch} from 'react-redux';
-import {Icon, Button} from 'react-native-elements';
-import {saveTheme, saveSettings} from '../store/themes/themes.actions';
-import DraggableFlatList from 'react-native-draggable-flatlist';
-import {ColorPicker, toHsv, fromHsv} from 'react-native-color-picker';
+import {Button, Divider, ButtonGroup, Icon} from 'react-native-elements';
+import {saveSettings} from '../store/themes/themes.actions';
 import Themes from '../components/Settings/Themes';
+import {View} from 'react-native';
+import OrderList from '../components/Settings/OrderList';
+import ButtonGroupSettings from '../components/Settings/ButtonGroupSettings';
 
 const SettingsPage = () => {
+  const menuPositions = [
+    {
+      key: menuStyles.leftHanded,
+      text: 'Left',
+    },
+    {key: menuStyles.neutral, text: 'Neutral'},
+    {
+      key: menuStyles.rightHanded,
+      text: 'Right',
+    },
+  ];
+  const formats = [
+    {key: timeFormats.twelveHours, text: '12h'},
+    {key: timeFormats.twentyfourHours, text: '24h'},
+  ];
   const currentTheme = useSelector(getCurrentTheme);
+  const currentSettings = useSelector(getCurrentSettings);
   const [selectedTheme, setSelectedTheme] = useState(defaultTheme);
   const [editTheme, setEditTheme] = useState(false);
   const userThemes = useSelector(getLoadedThemes);
-  const currentSettings = useSelector(getCurrentSettings);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -48,140 +62,123 @@ const SettingsPage = () => {
   const onEditThemePressed = () => {
     setEditTheme(!editTheme);
   };
+
+  const ThemePicker = ({style}) => {
+    return (
+      <Picker
+        selectedValue={selectedTheme.id ? selectedTheme.id : -1}
+        style={[settingsStyle(currentTheme).picker, style]}
+        onValueChange={value => onChangeTheme(value)}>
+        {userThemes.map((theme, index) => (
+          <Picker.Item
+            key={index}
+            label={theme.name}
+            value={theme.id ? theme.id : -1}
+          />
+        ))}
+      </Picker>
+    );
+  };
+
   return (
     <>
       <Page theme={currentTheme}>
         {editTheme ? (
           <>
-            <Button title="Close" onPress={onEditThemePressed} />
+            <ThemePicker />
             <Themes />
+            <Button title="Close" onPress={onEditThemePressed} />
           </>
         ) : (
           <>
-            <Text style={textStyles(currentTheme).general}>Settings</Text>
-            <Text style={textStyles(currentTheme).general}>Time format</Text>
-            <FlatList
-              horizontal={true}
-              data={[
-                {key: timeFormats.twelveHours, text: '12-hour'},
-                {key: timeFormats.twentyfourHours, text: '24-hour'},
-              ]}
-              contentContainerStyle={
-                containerStyles(currentSettings, currentTheme).settingsFlatList
+            <Text style={settingsStyle(currentTheme).pageTitle}>Settings</Text>
+            <ButtonGroupSettings
+              header={
+                <Text style={settingsStyle(currentTheme).header}>
+                  Time Format
+                </Text>
               }
-              renderItem={({item}) => (
-                <TouchableOpacity
-                  onPress={() =>
-                    updateSettings(settingsFields.timeFormat, item.key)
-                  }
-                  style={[
-                    currentSettings[settingsFields.timeFormat] === item.key &&
-                      buttonStyles(currentTheme).settingsItemSelected,
-                    buttonStyles(currentTheme).settingsItem,
-                  ]}>
-                  <Text
-                    style={
-                      currentSettings[settingsFields.timeFormat] === item.key
-                        ? textStyles(currentTheme).settingsItemSelected
-                        : textStyles(currentTheme).settingsItem
-                    }>
-                    {item.text}
-                  </Text>
-                </TouchableOpacity>
-              )}
-            />
-            <Text style={textStyles(currentTheme).general}>Menu Position</Text>
-            <FlatList
-              horizontal={true}
-              data={[
-                {
-                  key: menuStyles.leftHanded,
-                  icon: icons.leftHanded,
-                  text: 'Left',
-                },
-                {key: menuStyles.neutral, icon: icons.neutral, text: 'Neutral'},
-                {
-                  key: menuStyles.rightHanded,
-                  icon: icons.rightHanded,
-                  text: 'Right',
-                },
-              ]}
-              contentContainerStyle={
-                containerStyles(currentSettings, currentTheme).settingsFlatList
+              data={formats}
+              settingsField={settingsFields.timeFormat}
+              updateSettings={updateSettings}
+              buttonStyle={settingsStyle(currentTheme).buttonStyle}
+              selectedButtonStyle={
+                settingsStyle(currentTheme).selectedButtonStyle
               }
-              renderItem={({item}) => (
-                <TouchableOpacity
-                  onPress={() =>
-                    updateSettings(settingsFields.menuStyle, item.key)
-                  }
-                  style={[
-                    currentSettings.menuStyle === item.key &&
-                      buttonStyles(currentTheme).settingsItemSelected,
-                    buttonStyles(currentTheme).settingsItem,
-                  ]}>
-                  <Text
-                    style={
-                      currentSettings.menuStyle === item.key
-                        ? textStyles(currentTheme).settingsItemSelected
-                        : textStyles(currentTheme).settingsItem
-                    }>
-                    {item.text}
-                  </Text>
-                  <Icon
-                    color={
-                      currentSettings.menuStyle === item.key
-                        ? textStyles(currentTheme).settingsItemSelected.color
-                        : textStyles(currentTheme).settingsItem.color
-                    }
-                    name={item.icon}
-                    type={icons.type}
-                    size={general.settingsIconSize}
-                  />
-                </TouchableOpacity>
-              )}
+              textStyle={settingsStyle(currentTheme).textStyle}
+              selectedTextStyle={settingsStyle(currentTheme).selectedTextStyle}
+              containerStyle={settingsStyle(currentTheme).containerStyle}
             />
-            <Text style={textStyles(currentTheme).general}>Menu Order</Text>
-            <View style={{height: 250}}>
-              <DraggableFlatList
-                data={currentSettings.menu}
-                renderItem={({item, index, drag, isActive}) => (
-                  <TouchableOpacity
-                    style={[
-                      buttonStyles(currentTheme).settingsItem,
-                      buttonStyles(currentTheme)[item.key],
-                    ]}
-                    onLongPress={drag}>
-                    <Icon
-                      name={icons[item.key]}
-                      type={icons.type}
-                      size={general.settingsIconSize}
-                      color={
-                        textStyles(currentTheme).settingsItemSelected.color
-                      }
-                    />
-                    <Text>{' ' + item.key}</Text>
-                  </TouchableOpacity>
-                )}
-                keyExtractor={(item, index) => `draggable-item-${item.key}`}
-                onDragEnd={({data}) =>
-                  updateSettings(settingsFields.menu, data)
-                }
-              />
-            </View>
-            <Text style={textStyles(currentTheme).general}>Themes</Text>
-            <Picker
-              selectedValue={selectedTheme.id ? selectedTheme.id : -1}
-              style={textStyles(currentTheme).general}
-              onValueChange={value => onChangeTheme(value)}>
-              {userThemes.map((theme, index) => (
-                <Picker.Item
-                  key={index}
-                  label={theme.name}
-                  value={theme.id ? theme.id : -1}
+            <ButtonGroupSettings
+              header={
+                <Text style={settingsStyle(currentTheme).header}>
+                  Menu Position
+                </Text>
+              }
+              data={menuPositions}
+              settingsField={settingsFields.menuStyle}
+              updateSettings={updateSettings}
+              buttonStyle={settingsStyle(currentTheme).buttonStyle}
+              selectedButtonStyle={
+                settingsStyle(currentTheme).selectedButtonStyle
+              }
+              textStyle={settingsStyle(currentTheme).textStyle}
+              selectedTextStyle={settingsStyle(currentTheme).selectedTextStyle}
+              containerStyle={settingsStyle(currentTheme).containerStyle}
+            />
+            <Text style={settingsStyle(currentTheme).header}>Order</Text>
+            <View style={settingsStyle(currentTheme).orderSettings}>
+              <View style={settingsStyle(currentTheme).orderList}>
+                <Text style={settingsStyle(currentTheme).header}>Menu</Text>
+                <OrderList
+                  data={currentSettings.menu}
+                  onDragEnd={({data}) =>
+                    updateSettings(settingsFields.menu, data)
+                  }
                 />
-              ))}
-            </Picker>
-            <Button title="Edit current theme" onPress={onEditThemePressed} />
+              </View>
+              <View style={settingsStyle(currentTheme).orderList}>
+                <Text style={settingsStyle(currentTheme).header}>Card</Text>
+                <OrderList
+                  data={currentSettings.cardOrder}
+                  onDragEnd={({data}) =>
+                    updateSettings(settingsFields.cardOrder, data)
+                  }
+                />
+              </View>
+            </View>
+            <View style={settingsStyle(currentTheme).inline}>
+              <Text style={settingsStyle(currentTheme).header}>Themes</Text>
+              <ThemePicker style={{flex: 6}} />
+              <TouchableOpacity
+                style={settingsStyle(currentTheme).inlineButton}
+                onPress={onEditThemePressed}>
+                <Icon
+                  name={icons.edit}
+                  type={icons.type}
+                  size={general.settingsIconSize}
+                  color={
+                    currentTheme.colors[themeFields.items.general][
+                      themeFields.styles.mainColor
+                    ]
+                  }
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={settingsStyle(currentTheme).inlineButton}
+                onPress={onEditThemePressed}>
+                <Icon
+                  name={icons.add}
+                  type={icons.type}
+                  size={general.settingsIconSize}
+                  color={
+                    currentTheme.colors[themeFields.items.general][
+                      themeFields.styles.mainColor
+                    ]
+                  }
+                />
+              </TouchableOpacity>
+            </View>
           </>
         )}
       </Page>
@@ -189,4 +186,69 @@ const SettingsPage = () => {
   );
 };
 
+const settingsStyle = theme => {
+  return StyleSheet.create({
+    container: {},
+    pageTitle: {
+      fontSize: 22,
+      color:
+        theme.colors[themeFields.items.general][themeFields.styles.mainColor],
+    },
+    header: {
+      width: 100,
+      fontSize: 15,
+      color:
+        theme.colors[themeFields.items.general][themeFields.styles.mainColor],
+    },
+    inline: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    inlineButton: {
+      flex: 1,
+      borderWidth: 1,
+      padding: 8,
+      borderRadius: 8,
+      marginLeft: 5,
+      borderColor:
+        theme.colors[themeFields.items.general][themeFields.styles.mainColor],
+    },
+    orderSettings: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    orderList: {
+      flex: 1,
+      margin: 10,
+    },
+    buttonStyle: {
+      backgroundColor:
+        theme.colors[themeFields.items.general][
+          themeFields.styles.secondaryColor
+        ],
+    },
+    textStyle: {
+      color:
+        theme.colors[themeFields.items.general][themeFields.styles.mainColor],
+    },
+    selectedButtonStyle: {
+      backgroundColor:
+        theme.colors[themeFields.items.general][themeFields.styles.mainColor],
+    },
+    selectedTextStyle: {
+      color:
+        theme.colors[themeFields.items.general][
+          themeFields.styles.secondaryColor
+        ],
+    },
+    containerStyle: {
+      borderColor:
+        theme.colors[themeFields.items.general][themeFields.styles.mainColor],
+    },
+    picker: {
+      color:
+        theme.colors[themeFields.items.general][themeFields.styles.mainColor],
+    },
+  });
+};
 export default SettingsPage;
