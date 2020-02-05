@@ -62,8 +62,9 @@ export const themeFields = {
   },
 };
 
-export const defaultTheme = {
-  name: 'Default',
+export const defaultDarkTheme = {
+  id: 1,
+  name: 'Dark',
   colors: {
     [themeFields.items.general]: {
       [themeFields.styles.secondaryColor]: '#4D4D4D',
@@ -88,6 +89,32 @@ export const defaultTheme = {
   },
 };
 
+export const defaultLightTheme = {
+  id: 2,
+  name: 'Light',
+  colors: {
+    [themeFields.items.general]: {
+      [themeFields.styles.mainColor]: '#0E8BFB',
+      [themeFields.styles.secondaryColor]: '#FFF9F9',
+    },
+    [themeFields.items.note]: {
+      [themeFields.styles.mainColor]: '#E3E3E3',
+      [themeFields.styles.secondaryColor]: '#5DB2FF',
+    },
+    [themeFields.items.event]: {
+      [themeFields.styles.mainColor]: '#E3E3E3',
+      [themeFields.styles.secondaryColor]: '#FF8750',
+    },
+    [themeFields.items.task]: {
+      [themeFields.styles.mainColor]: '#E3E3E3',
+      [themeFields.styles.secondaryColor]: '#709C34',
+    },
+    [themeFields.items.other]: {
+      [themeFields.styles.mainColor]: '#5B5A59',
+      [themeFields.styles.secondaryColor]: '#8B8B8B',
+    },
+  },
+};
 export const defaultSettings = {
   [settingsFields.menuStyle]: menuStyles.rightHanded,
   [settingsFields.menu]: [

@@ -4,11 +4,15 @@ import {
   ADD_THEME,
   REMOVE_THEME,
 } from './themes.actiontype';
-import {defaultTheme, defaultSettings} from '../../config/style';
+import {
+  defaultSettings,
+  defaultLightTheme,
+  defaultDarkTheme,
+} from '../../config/style';
 
 const initialThemeState = {
-  themes: [defaultTheme],
-  currentTheme: defaultTheme,
+  themes: [defaultLightTheme, defaultDarkTheme],
+  currentTheme: defaultLightTheme,
   currentSettings: defaultSettings,
 };
 
@@ -17,7 +21,13 @@ const themeReducer = (state = initialThemeState, action) => {
     case SAVE_SETTINGS:
       return {...state, currentSettings: action.payload.data};
     case SAVE_THEME:
-      return {...state, currentTheme: action.payload.data};
+      return {
+        ...state,
+        currentTheme: action.payload.data,
+        themes: state.themes.map(theme =>
+          theme.id === action.payload.data.id ? action.payload.data : theme,
+        ),
+      };
     case ADD_THEME:
       return {...state, themes: [...state.themes, action.payload.data]};
     case REMOVE_THEME:

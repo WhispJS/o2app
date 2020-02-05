@@ -18,7 +18,11 @@ import {
 } from '../store/themes/themes.selectors';
 import {useSelector, useDispatch} from 'react-redux';
 import {Button, Divider, ButtonGroup, Icon} from 'react-native-elements';
-import {saveSettings} from '../store/themes/themes.actions';
+import {
+  saveSettings,
+  saveTheme,
+  addTheme,
+} from '../store/themes/themes.actions';
 import Themes from '../components/Settings/Themes';
 import {View} from 'react-native';
 import OrderList from '../components/Settings/OrderList';
@@ -55,26 +59,31 @@ const SettingsPage = () => {
     dispatch(saveSettings({...currentSettings, [field]: value}));
   };
 
-  const onChangeTheme = theme => {
+  const onChangeTheme = themeId => {
+    const theme = userThemes[themeId];
     setSelectedTheme(theme);
+    dispatch(saveTheme(theme));
   };
 
   const onEditThemePressed = () => {
     setEditTheme(!editTheme);
   };
 
+  const onAddThemePressed = () => {
+    setEditTheme(!editTheme);
+    const newTheme = {...currentTheme, id: userThemes.length + 1};
+    dispatch(saveTheme(newTheme));
+    dispatch(addTheme(newTheme));
+  };
+
   const ThemePicker = ({style}) => {
     return (
       <Picker
-        selectedValue={selectedTheme.id ? selectedTheme.id : -1}
+        selectedValue={selectedTheme ? selectedTheme.id : -1}
         style={[settingsStyle(currentTheme).picker, style]}
         onValueChange={value => onChangeTheme(value)}>
         {userThemes.map((theme, index) => (
-          <Picker.Item
-            key={index}
-            label={theme.name}
-            value={theme.id ? theme.id : -1}
-          />
+          <Picker.Item key={index} label={theme.name} value={index} />
         ))}
       </Picker>
     );
@@ -166,7 +175,7 @@ const SettingsPage = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={settingsStyle(currentTheme).inlineButton}
-                onPress={onEditThemePressed}>
+                onPress={onAddThemePressed}>
                 <Icon
                   name={icons.add}
                   type={icons.type}
