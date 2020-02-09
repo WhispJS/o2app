@@ -27,6 +27,10 @@ import Themes from '../components/Settings/Themes';
 import {View} from 'react-native';
 import OrderList from '../components/Settings/OrderList';
 import ButtonGroupSettings from '../components/Settings/ButtonGroupSettings';
+import {
+  setContextualMenu,
+  removeContextMenu,
+} from '../store/navigation/navigation.actions';
 
 const SettingsPage = () => {
   const menuPositions = [
@@ -46,14 +50,9 @@ const SettingsPage = () => {
   ];
   const currentTheme = useSelector(getCurrentTheme);
   const currentSettings = useSelector(getCurrentSettings);
-  const [selectedTheme, setSelectedTheme] = useState(defaultTheme);
   const [editTheme, setEditTheme] = useState(false);
   const userThemes = useSelector(getLoadedThemes);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    setSelectedTheme(currentTheme);
-  }, []);
 
   const updateSettings = (field, value) => {
     dispatch(saveSettings({...currentSettings, [field]: value}));
@@ -61,42 +60,51 @@ const SettingsPage = () => {
 
   const onChangeTheme = themeId => {
     const theme = userThemes[themeId];
-    setSelectedTheme(theme);
     dispatch(saveTheme(theme));
   };
 
-  const onEditThemePressed = () => {
-    setEditTheme(!editTheme);
+  const onEditThemePressed = isEditing => {
+    setEditTheme(isEditing);
+    if (isEditing) {
+      dispatch(setContextualMenu(themesContextualMenu));
+    } else {
+      dispatch(removeContextMenu());
+    }
   };
 
   const onAddThemePressed = () => {
-    setEditTheme(!editTheme);
-    const newTheme = {...currentTheme, id: userThemes.length + 1};
-    dispatch(saveTheme(newTheme));
-    dispatch(addTheme(newTheme));
+    onEditThemePressed(true);
+    dispatch(addTheme());
   };
 
-  const ThemePicker = ({style}) => {
+  const ThemePicker = ({style, themes}) => {
     return (
       <Picker
-        selectedValue={selectedTheme ? selectedTheme.id : -1}
+        selectedValue={currentTheme ? userThemes.indexOf(currentTheme) : -1}
         style={[settingsStyle(currentTheme).picker, style]}
         onValueChange={value => onChangeTheme(value)}>
-        {userThemes.map((theme, index) => (
+        {themes.map((theme, index) => (
           <Picker.Item key={index} label={theme.name} value={index} />
         ))}
       </Picker>
     );
   };
 
+  const themesContextualMenu = [
+    {
+      key: 'close',
+      onPress: () => onEditThemePressed(false),
+    },
+    {key: 'add', onPress: () => onAddThemePressed()},
+  ];
+
   return (
     <>
       <Page theme={currentTheme}>
         {editTheme ? (
           <>
-            <ThemePicker />
+            <ThemePicker themes={userThemes} />
             <Themes />
-            <Button title="Close" onPress={onEditThemePressed} />
           </>
         ) : (
           <>
@@ -147,7 +155,9 @@ const SettingsPage = () => {
                 />
               </View>
               <View style={settingsStyle(currentTheme).orderList}>
-                <Text style={settingsStyle(currentTheme).header}>Card</Text>
+                <Text style={settingsStyle(currentTheme).header}>
+                  Home screen
+                </Text>
                 <OrderList
                   data={currentSettings.cardOrder}
                   onDragEnd={({data}) =>
@@ -158,10 +168,10 @@ const SettingsPage = () => {
             </View>
             <View style={settingsStyle(currentTheme).inline}>
               <Text style={settingsStyle(currentTheme).header}>Themes</Text>
-              <ThemePicker style={{flex: 6}} />
+              <ThemePicker style={{flex: 6}} themes={userThemes} />
               <TouchableOpacity
                 style={settingsStyle(currentTheme).inlineButton}
-                onPress={onEditThemePressed}>
+                onPress={() => onEditThemePressed(true)}>
                 <Icon
                   name={icons.edit}
                   type={icons.type}

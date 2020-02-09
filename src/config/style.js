@@ -24,6 +24,7 @@ export const icons = {
   add: 'plus',
   back: 'arrow-up',
   forward: 'arrow-down',
+  close: 'times',
 };
 
 export const menuStyles = {

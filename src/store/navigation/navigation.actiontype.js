@@ -1,2 +1,5 @@
-export const GO_TO = "GO_TO";
-export const GO_BACK = "GO_BACK";
+export const GO_TO = 'GO_TO';
+export const GO_BACK = 'GO_BACK';
+
+export const SET_CONTEXTUAL_MENU = 'SET_CONTEXTUAL_MENU';
+export const REMOVE_CONTEXTUAL_MENU = 'REMOVE_CONTEXTUAL_MENU';

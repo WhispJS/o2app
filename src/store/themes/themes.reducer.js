@@ -29,7 +29,21 @@ const themeReducer = (state = initialThemeState, action) => {
         ),
       };
     case ADD_THEME:
-      return {...state, themes: [...state.themes, action.payload.data]};
+      const themesWithSameName = state.themes.filter(
+        theme => theme.name === state.currentTheme.name,
+      );
+      const newTheme = {
+        ...state.currentTheme,
+        id: state.themes.length + 1,
+        name: `${state.currentTheme.name} ${
+          themesWithSameName.length > 0 ? themesWithSameName.length + 1 : ''
+        }`,
+      };
+      return {
+        ...state,
+        currentTheme: newTheme,
+        themes: [...state.themes, newTheme],
+      };
     case REMOVE_THEME:
       return {
         ...state,
