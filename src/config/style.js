@@ -1,8 +1,8 @@
 import {StyleSheet} from 'react-native';
 
 export const general = {
-  menuButtonSize: 25,
-  settingsIconSize: 25,
+  menuButtonSize: 23,
+  settingsIconSize: 20,
   clockIconSize: 30,
   cardIconSize: 20,
 };

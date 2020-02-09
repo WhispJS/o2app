@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
-import {Icon} from 'react-native-elements';
+import {Icon, Divider} from 'react-native-elements';
 import {
   containerStyles,
   buttonStyles,
@@ -31,91 +31,112 @@ const Menu = () => {
     dispatch(goTo(path));
   };
   return (
-    <View style={menuStyle(currentTheme, themeFields.items.general).container}>
+    <View
+      style={
+        menuStyle(currentTheme, themeFields.items.general, currentSettings)
+          .container
+      }>
       {contextualMenu && (
-        <FlatList
-          horizontal={
-            currentSettings[settingsFields.menuStyle] === menuStyles.neutral
-          }
-          style={
-            menuStyle(currentTheme, themeFields.items.general).contextualMenu
-          }
-          contentContainerStyle={
-            menuStyle(currentTheme, themeFields.items.general).menuList
-          }
-          data={contextualMenu}
-          renderItem={({item}) => (
-            <TouchableOpacity
-              style={menuStyle(currentTheme, themeFields.items.other).button}
-              onPress={item.onPress}>
-              <Icon
-                name={icons[item.key]}
-                type={icons.type}
-                size={general.menuButtonSize}
-                color={
-                  currentTheme.colors[themeFields.items.other][
-                    themeFields.styles.secondaryColor
-                  ]
+        <>
+          <View
+            style={
+              menuStyle(
+                currentTheme,
+                themeFields.items.general,
+                currentSettings,
+              ).menuList
+            }>
+            {contextualMenu.map(menuItem => (
+              <TouchableOpacity
+                key={menuItem.key}
+                style={
+                  menuStyle(
+                    currentTheme,
+                    themeFields.items.other,
+                    currentSettings,
+                  ).button
                 }
-              />
-            </TouchableOpacity>
-          )}
-        />
+                onPress={menuItem.onPress}>
+                <Icon
+                  name={icons[menuItem.key]}
+                  type={icons.type}
+                  size={general.menuButtonSize}
+                  color={
+                    currentTheme.colors[themeFields.items.other][
+                      themeFields.styles.secondaryColor
+                    ]
+                  }
+                />
+              </TouchableOpacity>
+            ))}
+          </View>
+          <Divider
+            style={
+              menuStyle(
+                currentTheme,
+                themeFields.items.general,
+                currentSettings,
+              ).dividerStyle
+            }
+          />
+        </>
       )}
-      <FlatList
-        horizontal={
-          currentSettings[settingsFields.menuStyle] === menuStyles.neutral
-        }
-        style={menuStyle(currentTheme, themeFields.items.general).mainMenu}
-        contentContainerStyle={
-          menuStyle(currentTheme, themeFields.items.general).menuList
-        }
-        data={currentSettings[settingsFields.menu]}
-        renderItem={({item}) => (
+      <View
+        style={
+          menuStyle(currentTheme, themeFields.items.general, currentSettings)
+            .menuList
+        }>
+        {currentSettings[settingsFields.menu].map(menuItem => (
           <TouchableOpacity
-            style={menuStyle(currentTheme, item.theme).button}
-            onPress={() => handleMainMenuPress(paths[item.key])}>
+            key={menuItem.key}
+            style={
+              menuStyle(currentTheme, menuItem.theme, currentSettings).button
+            }
+            onPress={() => handleMainMenuPress(paths[menuItem.key])}>
             <Icon
-              name={icons[item.key]}
+              name={icons[menuItem.key]}
               type={icons.type}
               size={general.menuButtonSize}
               color={
-                currentTheme.colors[item.theme][
+                currentTheme.colors[menuItem.theme][
                   themeFields.styles.secondaryColor
                 ]
               }
             />
           </TouchableOpacity>
-        )}
-      />
+        ))}
+      </View>
     </View>
   );
 };
 
-const menuStyle = (theme, type) => {
+const menuStyle = (theme, type, settings) => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      flexDirection: 'column',
-      justifyContent: 'space-between',
       borderWidth: 1,
+      flexDirection:
+        settings.menuStyle === menuStyles.neutral ? 'row' : 'column',
+      justifyContent: 'space-evenly',
       borderStyle: 'solid',
       borderColor:
         theme.colors[themeFields.items.general][themeFields.styles.mainColor],
       borderRadius: 10,
     },
-    contextualMenu: {
-      flex: 1,
-    },
-    mainMenu: {flex: 6},
     menuList: {
-      flex: 1,
-      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection:
+        settings.menuStyle === menuStyles.neutral ? 'row' : 'column',
+      justifyContent: 'space-evenly',
+    },
+    dividerStyle: {
+      height: 1,
+      backgroundColor: theme.colors[type][themeFields.styles.mainColor],
     },
     button: {
       borderRadius: 200,
       padding: 15,
-      margin: 10,
+      margin: 3,
       backgroundColor: theme.colors[type][themeFields.styles.mainColor],
     },
   });
