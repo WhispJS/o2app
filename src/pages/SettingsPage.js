@@ -1,8 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {Text, Picker, StyleSheet, TouchableOpacity} from 'react-native';
 import {
-  textStyles,
-  defaultTheme,
   settingsFields,
   menuStyles,
   icons,
@@ -17,7 +15,7 @@ import {
   getLoadedThemes,
 } from '../store/themes/themes.selectors';
 import {useSelector, useDispatch} from 'react-redux';
-import {Button, Divider, ButtonGroup, Icon} from 'react-native-elements';
+import {Icon} from 'react-native-elements';
 import {
   saveSettings,
   saveTheme,

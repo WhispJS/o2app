@@ -145,7 +145,7 @@ export const containerStyles = (settings, theme) =>
       flexDirection:
         settings.menuStyle === menuStyles.neutral ? 'column' : 'row',
       justifyContent: 'center',
-      marginTop: 15,
+      marginTop: 5,
     },
     outerContainer: {
       flex: 1,
@@ -153,13 +153,13 @@ export const containerStyles = (settings, theme) =>
         theme.colors[themeFields.items.general][
           themeFields.styles.secondaryColor
         ],
-      padding: 10,
+      padding: 5,
     },
     main: {
-      flex: settings.menuStyle === menuStyles.neutral ? 9 : 4,
-      paddingLeft: settings.menuStyle === menuStyles.leftHanded ? 15 : 0,
-      paddingRight: settings.menuStyle === menuStyles.rightHanded ? 15 : 0,
-      paddingBottom: settings.menuStyle === menuStyles.neutral ? 15 : 0,
+      flex: settings.menuStyle === menuStyles.neutral ? 10 : 6,
+      paddingLeft: settings.menuStyle === menuStyles.leftHanded ? 5 : 0,
+      paddingRight: settings.menuStyle === menuStyles.rightHanded ? 5 : 0,
+      paddingBottom: settings.menuStyle === menuStyles.neutral ? 5 : 0,
     },
     clock: {
       flexDirection: 'row',

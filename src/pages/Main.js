@@ -1,75 +1,29 @@
-import React, {useEffect, useState} from 'react';
-import {
-  Text,
-  FlatList,
-  TouchableOpacity,
-  Button,
-  StyleSheet,
-} from 'react-native';
-import {
-  containerStyles,
-  textStyles,
-  themeFields,
-  settingsFields,
-} from '../config/style';
+import React from 'react';
 import Page from '../components/Page/Page';
 import {useSelector} from 'react-redux';
-import {
-  getCurrentTheme,
-  getCurrentSettings,
-} from '../store/themes/themes.selectors';
-import Card from '../components/Card/Card';
-
-const fakeData = [
-  {type: 'task', data: ['task one', 'task two']},
-  {type: 'note', data: ['first note']},
-];
+import {getCurrentTheme} from '../store/themes/themes.selectors';
+import {getNotes} from '../store/note/note.selectors';
+import {getTasks} from '../store/task/task.selectors';
+import {getEvents} from '../store/event/event.selectors';
+import OrderCardList from '../components/OrderedCardList/OrderedCardList';
 
 const Main = () => {
   const currentTheme = useSelector(getCurrentTheme);
-  const currentSettings = useSelector(getCurrentSettings);
-
-  const reOrderData = (order, data) => {
-    return order.map(item => ({
-      key: item.key,
-      type: item.key,
-      data: data.filter(elem => elem.type === item.key).map(elem => elem.data),
-    }));
-  };
+  const notes = useSelector(getNotes);
+  const tasks = useSelector(getTasks);
+  const events = useSelector(getEvents);
 
   return (
     <Page theme={currentTheme}>
-      <FlatList
-        data={reOrderData(currentSettings.cardOrder, fakeData)}
-        contentContainerStyle={mainPageStyle.content}
-        typeExtractor={item => item.type}
-        renderItem={({item}) => (
-          <Card
-            type={item.type}
-            title={
-              item.data.length
-                ? `${item.data.length} ${item.type}${
-                    item.data.length > 1 ? 's' : ''
-                  }`
-                : noDataText[item.type]
-            }>
-            {item.data && <Text>{item.data[0]}</Text>}
-          </Card>
-        )}
+      <OrderCardList
+        data={[
+          {key: 'task', data: [...tasks]},
+          {key: 'note', data: [...notes]},
+          {key: 'event', data: [...events]},
+        ]}
       />
     </Page>
   );
 };
 
-const noDataText = {
-  note: 'No note',
-  event: 'No event',
-  task: 'No task',
-};
-const mainPageStyle = StyleSheet.create({
-  content: {
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
-  },
-});
 export default Main;

@@ -8,8 +8,16 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Icon} from 'react-native-elements';
 import Color from 'color';
 
-const Card = ({type, title, children}) => {
-  const actions = [{key: 'share'}, {key: 'copy'}, {key: 'edit'}, {key: 'add'}];
+const Card = ({
+  type,
+  title,
+  optionalActions,
+  children,
+  navigation,
+  onForwardPress,
+  onBackPress,
+}) => {
+  const actions = [{key: 'share'}, {key: 'copy'}, {key: 'edit'}];
   const currentTheme = useSelector(getCurrentTheme);
   return (
     <View style={cardStyle(currentTheme, type).container}>
@@ -25,7 +33,7 @@ const Card = ({type, title, children}) => {
         <View style={cardStyle(currentTheme, type).actions}>
           <FlatList
             horizontal
-            data={actions}
+            data={optionalActions ? [...actions, ...optionalActions] : actions}
             contentContainerStyle={cardStyle(currentTheme, type).actionList}
             renderItem={({item, index}) => (
               <TouchableOpacity
@@ -46,30 +54,36 @@ const Card = ({type, title, children}) => {
           />
         </View>
       </View>
-      <View style={cardStyle(currentTheme, type).navigation}>
-        <FlatList
-          data={[{key: 'back'}, {key: 'forward'}]}
-          contentContainerStyle={cardStyle(currentTheme, type).navigationList}
-          renderItem={({item, index}) => (
-            <TouchableOpacity
-              style={[
-                cardStyle(currentTheme, type).navigationAction,
-                {borderTopWidth: index !== 0 ? 1 : 0},
-              ]}>
-              <Icon
-                name={icons[item.key]}
-                type={icons.type}
-                size={general.cardIconSize}
-                color={
-                  currentTheme.colors[themeFields.items.general][
-                    themeFields.styles.secondaryColor
-                  ]
-                }
-              />
-            </TouchableOpacity>
-          )}
-        />
-      </View>
+      {navigation && (
+        <View style={cardStyle(currentTheme, type).navigation}>
+          <FlatList
+            data={[
+              {key: 'back', onPress: () => onBackPress()},
+              {key: 'forward', onPress: () => onForwardPress()},
+            ]}
+            contentContainerStyle={cardStyle(currentTheme, type).navigationList}
+            renderItem={({item, index}) => (
+              <TouchableOpacity
+                style={[
+                  cardStyle(currentTheme, type).navigationAction,
+                  {borderTopWidth: index !== 0 ? 1 : 0},
+                ]}
+                onPress={item.onPress}>
+                <Icon
+                  name={icons[item.key]}
+                  type={icons.type}
+                  size={general.cardIconSize}
+                  color={
+                    currentTheme.colors[themeFields.items.general][
+                      themeFields.styles.secondaryColor
+                    ]
+                  }
+                />
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+      )}
     </View>
   );
 };
