@@ -56,9 +56,11 @@ const OrderCardList = ({data}) => {
               : noDataText[item.key]
           }
           optionalActions={[{key: 'add'}]}
-          onForwardPress={() => onForwardPress(item.key)}
-          onBackPress={() => onBackPress(item.key)}
-          navigation>
+          optionalSideMenu={[
+            {key: 'back', onPress: () => onBackPress(item.key)},
+            {key: 'forward', onPress: () => onForwardPress(item.key)},
+          ]}
+          multiple>
           {item.data &&
             item.data[currentNavIndexes[item.key]] &&
             item.data[currentNavIndexes[item.key]].content}

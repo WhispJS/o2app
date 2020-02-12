@@ -45,6 +45,26 @@ const ElementPage = ({
     setCurrentElement(element);
   };
 
+  const getSideMenu = type => {
+    let sideMenu = [];
+    switch (type) {
+      case themeFields.items.note:
+        sideMenu = [{key: 'attachment', onPress: () => {}}];
+        break;
+    }
+    return sideMenu;
+  };
+
+  const getTitleActions = type => {
+    let titleActions = [];
+    switch (type) {
+      case themeFields.items.task:
+        titleActions = [{key: 'complete', onPress: () => {}}];
+        break;
+    }
+    return titleActions;
+  };
+
   const contextualMenu = [
     {
       key: 'add',
@@ -83,7 +103,12 @@ const ElementPage = ({
             data={elements}
             contentContainerStyle={elementPageStyle(currentTheme).content}
             renderItem={({item}) => (
-              <Card type={elementType} title={item.title}>
+              <Card
+                type={elementType}
+                title={item.title}
+                optionalSideMenu={getSideMenu(elementType)}
+                optionalTitleActions={getTitleActions(elementType)}
+                element={item}>
                 {item.content}
               </Card>
             )}

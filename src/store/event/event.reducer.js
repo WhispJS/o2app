@@ -1,7 +1,7 @@
 import {themeFields} from '../../config/style';
 
 const initialEventState = {
-  events: [],
+  events: [{id: 1, content: 'test', title: 'test'}],
 };
 
 export const emptyEvent = {

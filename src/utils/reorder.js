@@ -4,6 +4,9 @@
 export const reorderData = (order, data) => {
   const sortByOrderArrayGiven = (a, b) => {
     const flattenedOrderArray = order.map(item => item.key);
+    if (flattenedOrderArray.indexOf(a.key) === -1) {
+      return 1;
+    }
     return (
       flattenedOrderArray.indexOf(a.key) - flattenedOrderArray.indexOf(b.key)
     );

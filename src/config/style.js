@@ -28,6 +28,7 @@ export const icons = {
   attachment: 'paperclip',
   link: 'link',
   delete: 'trash',
+  complete: 'check',
 };
 
 export const menuStyles = {
