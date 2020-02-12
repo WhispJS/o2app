@@ -118,11 +118,11 @@ const cardStyle = (theme, type) => {
       padding: 5,
       backgroundColor: Color(
         theme.colors[type][themeFields.styles.mainColor],
-      ).lighten(0.6),
+      ).lighten(0.2),
       height: 90,
     },
     actions: {
-      padding: 2,
+      padding: 5,
       backgroundColor: theme.colors[type][themeFields.styles.mainColor],
       borderBottomLeftRadius: borderRadius,
     },
@@ -132,7 +132,6 @@ const cardStyle = (theme, type) => {
     },
     action: {
       flex: 1,
-      padding: 8,
       paddingLeft: 30,
       paddingRight: 30,
       borderColor: theme.colors[type][themeFields.styles.secondaryColor],

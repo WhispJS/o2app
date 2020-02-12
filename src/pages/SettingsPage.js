@@ -101,7 +101,15 @@ const SettingsPage = () => {
       <Page theme={currentTheme}>
         {editTheme ? (
           <>
-            <ThemePicker themes={userThemes} />
+            <Text style={settingsStyle(currentTheme).pageTitle}>
+              Edit theme
+            </Text>
+            <View style={settingsStyle(currentTheme).inline}>
+              <Text style={settingsStyle(currentTheme).header}>
+                Select theme
+              </Text>
+              <ThemePicker style={{flex: 6}} themes={userThemes} />
+            </View>
             <Themes />
           </>
         ) : (

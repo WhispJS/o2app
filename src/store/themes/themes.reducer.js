@@ -8,11 +8,12 @@ import {
   defaultSettings,
   defaultLightTheme,
   defaultDarkTheme,
+  defaultLightTheme2,
 } from '../../config/style';
 
 const initialThemeState = {
-  themes: [defaultLightTheme, defaultDarkTheme],
-  currentTheme: defaultLightTheme,
+  themes: [defaultLightTheme, defaultLightTheme2, defaultDarkTheme],
+  currentTheme: defaultLightTheme2,
   currentSettings: defaultSettings,
 };
 
@@ -35,9 +36,7 @@ const themeReducer = (state = initialThemeState, action) => {
       const newTheme = {
         ...state.currentTheme,
         id: state.themes.length + 1,
-        name: `${state.currentTheme.name} ${
-          themesWithSameName.length > 0 ? themesWithSameName.length + 1 : ''
-        }`,
+        name: 'New theme',
       };
       return {
         ...state,

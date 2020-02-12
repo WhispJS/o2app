@@ -1,7 +1,7 @@
 import {StyleSheet} from 'react-native';
 
 export const general = {
-  menuButtonSize: 23,
+  menuButtonSize: 20,
   settingsIconSize: 20,
   clockIconSize: 30,
   cardIconSize: 20,
@@ -24,7 +24,10 @@ export const icons = {
   add: 'plus',
   back: 'arrow-up',
   forward: 'arrow-down',
-  close: 'times',
+  close: 'reply',
+  attachment: 'paperclip',
+  link: 'link',
+  delete: 'trash',
 };
 
 export const menuStyles = {
@@ -116,6 +119,33 @@ export const defaultLightTheme = {
     },
   },
 };
+
+export const defaultLightTheme2 = {
+  id: 3,
+  name: 'Light 2',
+  colors: {
+    [themeFields.items.general]: {
+      [themeFields.styles.mainColor]: '#602010',
+      [themeFields.styles.secondaryColor]: '#FFFCF3',
+    },
+    [themeFields.items.note]: {
+      [themeFields.styles.mainColor]: '#5DB2FF',
+      [themeFields.styles.secondaryColor]: '#1C324E',
+    },
+    [themeFields.items.event]: {
+      [themeFields.styles.mainColor]: '#FF844C',
+      [themeFields.styles.secondaryColor]: '#763E22',
+    },
+    [themeFields.items.task]: {
+      [themeFields.styles.mainColor]: '#99C991',
+      [themeFields.styles.secondaryColor]: '#426615',
+    },
+    [themeFields.items.other]: {
+      [themeFields.styles.mainColor]: '#C5C2C3',
+      [themeFields.styles.secondaryColor]: '#602010',
+    },
+  },
+};
 export const defaultSettings = {
   [settingsFields.menuStyle]: menuStyles.rightHanded,
   [settingsFields.menu]: [
@@ -156,7 +186,7 @@ export const containerStyles = (settings, theme) =>
       padding: 5,
     },
     main: {
-      flex: settings.menuStyle === menuStyles.neutral ? 10 : 6,
+      flex: settings.menuStyle === menuStyles.neutral ? 9 : 6,
       paddingLeft: settings.menuStyle === menuStyles.leftHanded ? 5 : 0,
       paddingRight: settings.menuStyle === menuStyles.rightHanded ? 5 : 0,
       paddingBottom: settings.menuStyle === menuStyles.neutral ? 5 : 0,

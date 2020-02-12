@@ -4,6 +4,7 @@ import {getCurrentSettings} from '../../store/themes/themes.selectors';
 import {StyleSheet} from 'react-native';
 import {FlatList} from 'react-native';
 import Card from '../Card/Card';
+import {reorderData} from '../../utils/reorder';
 
 const OrderCardList = ({data}) => {
   const noDataText = {
@@ -17,15 +18,6 @@ const OrderCardList = ({data}) => {
     note: 0,
     event: 0,
   });
-  const reOrderData = (order, rawData) => {
-    const sortByOrderArrayGiven = (a, b) => {
-      const flattenedOrderArray = order.map(item => item.key);
-      return (
-        flattenedOrderArray.indexOf(a.key) - flattenedOrderArray.indexOf(b.key)
-      );
-    };
-    return rawData.sort(sortByOrderArrayGiven);
-  };
 
   const onForwardPress = cardType => {
     if (
@@ -50,7 +42,7 @@ const OrderCardList = ({data}) => {
   };
   return (
     <FlatList
-      data={reOrderData(currentSettings.cardOrder, data)}
+      data={reorderData(currentSettings.cardOrder, data)}
       contentContainerStyle={orderCardListStyle.content}
       typeExtractor={item => item.key}
       renderItem={({item}) => (
