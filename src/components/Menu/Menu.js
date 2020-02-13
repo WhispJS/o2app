@@ -28,7 +28,7 @@ const Menu = () => {
   const dispatch = useDispatch();
 
   const handleMainMenuPress = path => {
-    dispatch(goTo(path));
+    dispatch(goTo(path, {isEditing: false}));
   };
   return (
     <View

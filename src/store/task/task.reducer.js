@@ -1,16 +1,5 @@
 import {themeFields} from '../../config/style';
 
-const initialTaskState = {
-  tasks: [
-    {id: 1, title: 'first rule', content: 'do no harm'},
-    {
-      id: 2,
-      title: 'in order to always get better',
-      content: 'always learn new things',
-    },
-  ],
-};
-
 export const emptyTask = {
   title: '',
   content: '',
@@ -18,6 +7,25 @@ export const emptyTask = {
     {key: themeFields.items.note, data: []},
     {key: themeFields.items.event, data: []},
     {key: themeFields.items.task, data: []},
+  ],
+};
+
+const initialTaskState = {
+  tasks: [
+    {
+      ...emptyTask,
+      id: 1,
+      title: 'first rule',
+      content: 'do no harm',
+      done: true,
+    },
+    {
+      ...emptyTask,
+      id: 2,
+      title: 'in order to always get better',
+      content: 'always learn new things',
+      done: false,
+    },
   ],
 };
 

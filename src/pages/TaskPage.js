@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Text} from 'react-native';
 import {themeFields, icons} from '../config/style';
 import {useSelector} from 'react-redux';
@@ -8,15 +8,17 @@ import {StyleSheet} from 'react-native';
 import {emptyTask} from '../store/task/task.reducer';
 import {TextInput} from 'react-native';
 import {View} from 'react-native';
-import {TouchableOpacity} from 'react-native';
-import {Icon} from 'react-native-elements';
 import LinkedElements from '../components/LinkedElements/LinkedElements';
 import ElementPage from '../components/Page/ElementPage';
+import {getPageParams} from '../store/navigation/navigation.selectors';
 
 const TaskPage = () => {
+  const params = useSelector(getPageParams);
   const currentTheme = useSelector(getCurrentTheme);
   const tasks = useSelector(getTasks);
-  const [currentTask, setCurrentTask] = useState(emptyTask);
+  const [currentTask, setCurrentTask] = useState(
+    params && params.task ? params.task : emptyTask,
+  );
 
   const onChangeTitle = ({nativeEvent}) => {
     const updatedTask = {...currentTask, title: nativeEvent.text};
@@ -27,6 +29,12 @@ const TaskPage = () => {
     const updatedTask = {...currentTask, content: nativeEvent.text};
     setCurrentTask(updatedTask);
   };
+
+  useEffect(() => {
+    if (params && params.task) {
+      setCurrentTask(params.task);
+    }
+  }, [params]);
 
   return (
     <ElementPage

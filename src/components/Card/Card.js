@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, FlatList} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {
   getCurrentTheme,
   getCurrentSettings,
@@ -11,11 +11,13 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Icon} from 'react-native-elements';
 import Color from 'color';
 import {reorderData} from '../../utils/reorder';
+import {goTo} from '../../store/navigation/navigation.actions';
+import {paths} from '../../config/routes';
 
 const Card = ({
   type,
   title,
-  optionalActions,
+  optionalActions = [],
   children,
   multiple,
   optionalSideMenu = [],
@@ -23,7 +25,17 @@ const Card = ({
   element,
 }) => {
   const currentSettings = useSelector(getCurrentSettings);
-  const actions = [{key: 'share'}, {key: 'copy'}, {key: 'edit'}];
+  const dispatch = useDispatch();
+  const actions = [
+    {key: 'share'},
+    {
+      key: 'edit',
+      onPress: () =>
+        dispatch(goTo(paths[type], {[type]: element, isEditing: true})),
+    },
+    ...optionalActions,
+    {key: 'delete', onPress: () => {}},
+  ];
   const sideMenu = multiple
     ? optionalSideMenu
     : reorderData(
@@ -35,13 +47,14 @@ const Card = ({
           ...optionalSideMenu,
         ].map(menuItem => ({
           ...menuItem,
-          text: `${element.linked ? element.linked[menuItem.key].length : 0}`,
+          text: `${
+            element.linked && element.linked[menuItem.key]
+              ? element.linked[menuItem.key].length
+              : 0
+          }`,
         })),
       );
-  const titleActions = [
-    {key: 'delete', onPress: () => {}},
-    ...optionalTitleActions,
-  ];
+  const titleActions = [...optionalTitleActions];
   const currentTheme = useSelector(getCurrentTheme);
   return (
     <View style={cardStyle(currentTheme, type).container}>
@@ -90,10 +103,12 @@ const Card = ({
         <View style={cardStyle(currentTheme, type).actions}>
           <FlatList
             horizontal
-            data={optionalActions ? [...actions, ...optionalActions] : actions}
+            data={actions}
             contentContainerStyle={cardStyle(currentTheme, type).actionList}
             renderItem={({item, index}) => (
-              <TouchableOpacity style={[cardStyle(currentTheme, type).action]}>
+              <TouchableOpacity
+                style={[cardStyle(currentTheme, type).action]}
+                onPress={item.onPress}>
                 <Icon
                   name={icons[item.key]}
                   type={icons.type}

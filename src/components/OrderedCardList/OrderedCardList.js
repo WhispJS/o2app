@@ -1,10 +1,16 @@
 import React, {useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {getCurrentSettings} from '../../store/themes/themes.selectors';
 import {StyleSheet} from 'react-native';
 import {FlatList} from 'react-native';
 import Card from '../Card/Card';
 import {reorderData} from '../../utils/reorder';
+import {goTo} from '../../store/navigation/navigation.actions';
+import {paths} from '../../config/routes';
+import {emptyNote} from '../../store/note/note.reducer';
+import {themeFields} from '../../config/style';
+import {emptyTask} from '../../store/task/task.reducer';
+import {emptyEvent} from '../../store/event/event.reducer';
 
 const OrderCardList = ({data}) => {
   const noDataText = {
@@ -12,7 +18,13 @@ const OrderCardList = ({data}) => {
     event: 'No event',
     task: 'No task',
   };
+  const emptyElement = {
+    [themeFields.items.note]: emptyNote,
+    [themeFields.items.task]: emptyTask,
+    [themeFields.items.event]: emptyEvent,
+  };
   const currentSettings = useSelector(getCurrentSettings);
+  const dispatch = useDispatch();
   const [currentNavIndexes, setCurrentNavIndexes] = useState({
     task: 0,
     note: 0,
@@ -55,11 +67,23 @@ const OrderCardList = ({data}) => {
                 }${item.data.length > 1 ? 's' : ''}`
               : noDataText[item.key]
           }
-          optionalActions={[{key: 'add'}]}
+          optionalActions={[
+            {
+              key: 'add',
+              onPress: () =>
+                dispatch(
+                  goTo(paths[item.key], {
+                    [item.key]: emptyElement[item.key],
+                    isEditing: true,
+                  }),
+                ),
+            },
+          ]}
           optionalSideMenu={[
             {key: 'back', onPress: () => onBackPress(item.key)},
             {key: 'forward', onPress: () => onForwardPress(item.key)},
           ]}
+          element={item.data[currentNavIndexes[item.key]]}
           multiple>
           {item.data &&
             item.data[currentNavIndexes[item.key]] &&

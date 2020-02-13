@@ -1,8 +1,5 @@
 import {themeFields} from '../../config/style';
 
-const initialNoteState = {
-  notes: [{id: 1, title: 'Important', content: "Remember what's important"}],
-};
 export const emptyNote = {
   title: '',
   content: '',
@@ -10,6 +7,16 @@ export const emptyNote = {
     {key: themeFields.items.note, data: []},
     {key: themeFields.items.event, data: []},
     {key: themeFields.items.task, data: []},
+  ],
+};
+const initialNoteState = {
+  notes: [
+    {
+      ...emptyNote,
+      id: 1,
+      title: 'Important',
+      content: "Remember what's important",
+    },
   ],
 };
 const noteReducer = (state = initialNoteState, action) => {

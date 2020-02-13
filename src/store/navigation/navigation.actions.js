@@ -5,10 +5,12 @@ import {
   REMOVE_CONTEXTUAL_MENU,
 } from './navigation.actiontype';
 
-export const goTo = page => ({
-  type: GO_TO,
-  payload: {data: page},
-});
+export const goTo = (page, params) => {
+  return {
+    type: GO_TO,
+    payload: {data: page, params},
+  };
+};
 
 export const goBack = () => ({
   type: GO_BACK,

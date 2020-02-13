@@ -5,35 +5,40 @@ import Page from './Page';
 import {useSelector, useDispatch} from 'react-redux';
 import {StyleSheet} from 'react-native';
 import {getCurrentTheme} from '../../store/themes/themes.selectors';
-import {setContextualMenu} from '../../store/navigation/navigation.actions';
+import {
+  setContextualMenu,
+  goTo,
+} from '../../store/navigation/navigation.actions';
 import Card from '../Card/Card';
+import {getPageParams} from '../../store/navigation/navigation.selectors';
+import {paths} from '../../config/routes';
+import {emptyNote} from '../../store/note/note.reducer';
+import {emptyTask} from '../../store/task/task.reducer';
+import {emptyEvent} from '../../store/event/event.reducer';
 
-const ElementPage = ({
-  elementType,
-  emptyElement,
-  elementEdited,
-  elements,
-  children,
-}) => {
-  const [isEditing, setIsEditing] = useState(false);
+const ElementPage = ({elementType, elements, children}) => {
+  const params = useSelector(getPageParams);
+  const emptyElement = {
+    [themeFields.items.note]: emptyNote,
+    [themeFields.items.task]: emptyTask,
+    [themeFields.items.event]: emptyEvent,
+  };
   const currentTheme = useSelector(getCurrentTheme);
-  const [currentElement, setCurrentElement] = useState(
-    elementEdited ? elementEdited : emptyElement,
-  );
   const dispatch = useDispatch();
 
-  const openIndividualElementPage = () => {
-    setIsEditing(true);
+  const openIndividualElementPage = element => {
+    dispatch(
+      goTo(paths[elementType], {[elementType]: element, isEditing: true}),
+    );
     dispatch(setContextualMenu(editingContextualMenu));
   };
 
   const closeIndividualElementPage = () => {
-    setIsEditing(false);
+    dispatch(goTo(paths[elementType], {[elementType]: null, isEditing: false}));
   };
 
   const onPressAddElement = () => {
-    openIndividualElementPage();
-    setCurrentElement(emptyElement);
+    openIndividualElementPage(emptyElement[elementType]);
   };
 
   const onPressDeleteElement = () => {
@@ -41,8 +46,7 @@ const ElementPage = ({
   };
 
   const onPressEditElement = element => {
-    openIndividualElementPage();
-    setCurrentElement(element);
+    openIndividualElementPage(element);
   };
 
   const getSideMenu = type => {
@@ -59,7 +63,12 @@ const ElementPage = ({
     let titleActions = [];
     switch (type) {
       case themeFields.items.task:
-        titleActions = [{key: 'complete', onPress: () => {}}];
+        titleActions = [
+          {
+            key: 'done',
+            onPress: () => {},
+          },
+        ];
         break;
     }
     return titleActions;
@@ -76,16 +85,17 @@ const ElementPage = ({
     ...contextualMenu,
     {key: 'delete', onPress: () => onPressDeleteElement()},
   ];
-
   useEffect(() => {
     dispatch(
-      setContextualMenu(isEditing ? editingContextualMenu : contextualMenu),
+      setContextualMenu(
+        params.isEditing ? editingContextualMenu : contextualMenu,
+      ),
     );
-  }, [isEditing]);
+  }, [params]);
 
   return (
     <Page theme={currentTheme}>
-      {isEditing ? (
+      {params.isEditing ? (
         <ScrollView>
           <Text style={elementPageStyle(currentTheme).pageTitle}>
             {`Create ${elementType}`}

@@ -7,6 +7,7 @@ import {
 
 const initialNavigationState = {
   currentPage: 'home',
+  params: null,
   history: [],
   contextualMenu: null,
 };
@@ -17,6 +18,7 @@ const navigationReducer = (state = initialNavigationState, action) => {
       return {
         ...state,
         currentPage: action.payload.data,
+        params: action.payload.params,
         history: [...state.history, action.payload.data],
       };
     case GO_BACK:

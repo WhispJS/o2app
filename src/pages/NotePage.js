@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Text} from 'react-native';
 import {themeFields, icons} from '../config/style';
 import {useSelector} from 'react-redux';
@@ -12,11 +12,15 @@ import {TouchableOpacity} from 'react-native';
 import {Icon} from 'react-native-elements';
 import LinkedElements from '../components/LinkedElements/LinkedElements';
 import ElementPage from '../components/Page/ElementPage';
+import {getPageParams} from '../store/navigation/navigation.selectors';
 
 const NotePage = () => {
   const currentTheme = useSelector(getCurrentTheme);
+  const params = useSelector(getPageParams);
+  const [currentNote, setCurrentNote] = useState(
+    params && params.note ? params.note : emptyNote,
+  );
   const notes = useSelector(getNotes);
-  const [currentNote, setCurrentNote] = useState(emptyNote);
 
   const onChangeTitle = ({nativeEvent}) => {
     const updatedNote = {...currentNote, title: nativeEvent.text};
@@ -28,6 +32,11 @@ const NotePage = () => {
     setCurrentNote(updatedNote);
   };
 
+  useEffect(() => {
+    if (params && params.note) {
+      setCurrentNote(params.note);
+    }
+  }, [params]);
   return (
     <ElementPage
       elementType={themeFields.items.note}
@@ -55,6 +64,9 @@ const NotePage = () => {
           />
           <TouchableOpacity
             style={notePageStyle(currentTheme).attachmentButton}>
+            <Text style={notePageStyle(currentTheme).attachmentText}>
+              {currentNote.attachments ? currentNote.attachments.length : 0}
+            </Text>
             <Icon
               name={icons.attachment}
               type={icons.type}
@@ -65,9 +77,6 @@ const NotePage = () => {
                 ]
               }
             />
-            <Text style={notePageStyle(currentTheme).attachmentText}>
-              {currentNote.attachments ? currentNote.attachments.length : 0}
-            </Text>
           </TouchableOpacity>
         </View>
       </View>

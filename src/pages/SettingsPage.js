@@ -28,9 +28,13 @@ import ButtonGroupSettings from '../components/Settings/ButtonGroupSettings';
 import {
   setContextualMenu,
   removeContextMenu,
+  goTo,
 } from '../store/navigation/navigation.actions';
+import {paths} from '../config/routes';
+import {getPageParams} from '../store/navigation/navigation.selectors';
 
 const SettingsPage = () => {
+  const params = useSelector(getPageParams);
   const menuPositions = [
     {
       key: menuStyles.leftHanded,
@@ -48,7 +52,6 @@ const SettingsPage = () => {
   ];
   const currentTheme = useSelector(getCurrentTheme);
   const currentSettings = useSelector(getCurrentSettings);
-  const [editTheme, setEditTheme] = useState(false);
   const userThemes = useSelector(getLoadedThemes);
   const dispatch = useDispatch();
 
@@ -62,7 +65,7 @@ const SettingsPage = () => {
   };
 
   const onEditThemePressed = isEditing => {
-    setEditTheme(isEditing);
+    dispatch(goTo(paths.settings, {isEditing: true}));
     if (isEditing) {
       dispatch(setContextualMenu(themesContextualMenu));
     } else {
@@ -99,7 +102,7 @@ const SettingsPage = () => {
   return (
     <>
       <Page theme={currentTheme}>
-        {editTheme ? (
+        {params.isEditing ? (
           <>
             <Text style={settingsStyle(currentTheme).pageTitle}>
               Edit theme
