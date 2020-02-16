@@ -1,40 +1,30 @@
 import React, {useState, useEffect} from 'react';
 import {Text} from 'react-native';
 import {themeFields, icons} from '../config/style';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {getCurrentTheme} from '../store/themes/themes.selectors';
-import {getTasks} from '../store/task/task.selectors';
+import {getTasks, getCurrentTask} from '../store/task/task.selectors';
 import {StyleSheet} from 'react-native';
 import {emptyTask} from '../store/task/task.reducer';
 import {TextInput} from 'react-native';
 import {View} from 'react-native';
 import LinkedElements from '../components/LinkedElements/LinkedElements';
 import ElementPage from '../components/Page/ElementPage';
-import {getPageParams} from '../store/navigation/navigation.selectors';
+import {createOrUpdateTask} from '../store/task/task.actions';
 
 const TaskPage = () => {
-  const params = useSelector(getPageParams);
   const currentTheme = useSelector(getCurrentTheme);
   const tasks = useSelector(getTasks);
-  const [currentTask, setCurrentTask] = useState(
-    params && params.task ? params.task : emptyTask,
-  );
+  const currentTask = useSelector(getCurrentTask);
+  const dispatch = useDispatch();
 
   const onChangeTitle = ({nativeEvent}) => {
-    const updatedTask = {...currentTask, title: nativeEvent.text};
-    setCurrentTask(updatedTask);
+    dispatch(createOrUpdateTask({...currentTask, title: nativeEvent.text}));
   };
 
   const onChangeContent = ({nativeEvent}) => {
-    const updatedTask = {...currentTask, content: nativeEvent.text};
-    setCurrentTask(updatedTask);
+    dispatch(createOrUpdateTask({...currentTask, content: nativeEvent.text}));
   };
-
-  useEffect(() => {
-    if (params && params.task) {
-      setCurrentTask(params.task);
-    }
-  }, [params]);
 
   return (
     <ElementPage
@@ -44,7 +34,7 @@ const TaskPage = () => {
       <View style={taskPageStyle(currentTheme).verticalInputContainer}>
         <Text style={taskPageStyle(currentTheme).inputLabel}>Task title</Text>
         <TextInput
-          value={currentTask.title}
+          value={currentTask ? currentTask.title : ''}
           onChange={onChangeTitle}
           style={[taskPageStyle(currentTheme).input, {flex: 5}]}
         />
@@ -53,7 +43,7 @@ const TaskPage = () => {
         <Text style={taskPageStyle(currentTheme).inputLabel}>Content</Text>
         <View style={taskPageStyle(currentTheme).contentInputView}>
           <TextInput
-            value={currentTask.content}
+            value={currentTask ? currentTask.content : ''}
             multiline
             onChange={onChangeContent}
             style={[
@@ -63,7 +53,7 @@ const TaskPage = () => {
           />
         </View>
       </View>
-      <LinkedElements element={currentTask} />
+      <LinkedElements linked={currentTask ? currentTask.linked : []} />
     </ElementPage>
   );
 };

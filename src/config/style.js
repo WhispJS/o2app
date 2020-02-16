@@ -24,10 +24,11 @@ export const icons = {
   add: 'plus',
   back: 'arrow-up',
   forward: 'arrow-down',
-  close: 'reply',
+  close: 'arrow-left',
   attachment: 'paperclip',
   link: 'link',
   delete: 'trash',
+  trash: 'trash',
   done: 'check-square-o',
   undone: 'square-o',
 };
@@ -156,6 +157,7 @@ export const defaultSettings = {
     {key: 'event', theme: 'event'},
     {key: 'settings', theme: 'other'},
     {key: 'profile', theme: 'other'},
+    {key: 'trash', theme: 'other'},
   ],
   [settingsFields.cardOrder]: [
     {key: 'note', theme: 'note'},

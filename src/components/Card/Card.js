@@ -13,6 +13,8 @@ import Color from 'color';
 import {reorderData} from '../../utils/reorder';
 import {goTo} from '../../store/navigation/navigation.actions';
 import {paths} from '../../config/routes';
+import {deleteNote} from '../../store/note/note.actions';
+import {deleteTask} from '../../store/task/task.actions';
 
 const Card = ({
   type,
@@ -30,11 +32,26 @@ const Card = ({
     {key: 'share'},
     {
       key: 'edit',
-      onPress: () =>
-        dispatch(goTo(paths[type], {[type]: element, isEditing: true})),
+      onPress: () => {
+        dispatch(goTo(paths[type], {[type]: element, isEditing: true}));
+      },
     },
     ...optionalActions,
-    {key: 'delete', onPress: () => {}},
+    {
+      key: 'delete',
+      onPress: () => {
+        switch (type) {
+          case themeFields.items.note:
+            dispatch(deleteNote(element));
+            break;
+          case themeFields.items.task:
+            dispatch(deleteTask(element));
+            break;
+          case themeFields.items.event:
+            break;
+        }
+      },
+    },
   ];
   const sideMenu = multiple
     ? optionalSideMenu
@@ -108,6 +125,9 @@ const Card = ({
             renderItem={({item, index}) => (
               <TouchableOpacity
                 style={[cardStyle(currentTheme, type).action]}
+                disabled={
+                  (item.key === 'delete' || item.key === 'edit') && !element
+                }
                 onPress={item.onPress}>
                 <Icon
                   name={icons[item.key]}

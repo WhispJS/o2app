@@ -4,6 +4,7 @@ import themesMiddleware from './themes/themes.middleware';
 import noteMiddleware from './note/note.middleware';
 import eventMiddleware from './event/event.middleware';
 import taskMiddleware from './task/task.middleware';
+import trashMiddleware from './task/trash.middleware';
 
 const rootMiddleware = () =>
   applyMiddleware(
@@ -12,6 +13,7 @@ const rootMiddleware = () =>
     noteMiddleware,
     eventMiddleware,
     taskMiddleware,
+    trashMiddleware,
   );
 
 export default rootMiddleware;

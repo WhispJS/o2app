@@ -1,0 +1,1 @@
+export const ADD_ELEMENT_TO_TRASH = 'ADD_ELEMENT_TO_TRASH';

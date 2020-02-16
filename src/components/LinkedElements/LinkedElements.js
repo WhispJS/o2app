@@ -12,7 +12,7 @@ import {FlatList} from 'react-native';
 import {TouchableOpacity} from 'react-native';
 import {reorderData} from '../../utils/reorder';
 
-const LinkedElements = ({element}) => {
+const LinkedElements = ({linked}) => {
   const currentTheme = useSelector(getCurrentTheme);
   const currentSettings = useSelector(getCurrentSettings);
   return (
@@ -24,75 +24,73 @@ const LinkedElements = ({element}) => {
         }>
         Linked elements
       </Text>
-      {reorderData(currentSettings.cardOrder, element.linked).map(
-        linkedList => (
-          <View
-            style={linkedElementStyle(currentTheme, linkedList.key).container}>
-            <TouchableOpacity
-              style={
-                linkedElementStyle(currentTheme, linkedList.key).titleContainer
-              }>
-              <View
-                style={linkedElementStyle(currentTheme, linkedList.key).title}>
-                <Icon
-                  name={icons[linkedList.key]}
-                  type={icons.type}
-                  size={20}
-                  color={
-                    currentTheme.colors[linkedList.key][
-                      themeFields.styles.secondaryColor
-                    ]
-                  }
-                />
-                <Text
-                  style={
-                    linkedElementStyle(currentTheme, linkedList.key).titleText
-                  }>
-                  {`${
-                    linkedList.data.length > 0 ? linkedList.data.length : ''
-                  } Linked ${linkedList.key}${
-                    linkedList.data.length > 1 ? 's' : ''
-                  }`}
-                </Text>
-              </View>
-              <View
+      {reorderData(currentSettings.cardOrder, linked).map(linkedList => (
+        <View
+          style={linkedElementStyle(currentTheme, linkedList.key).container}>
+          <TouchableOpacity
+            style={
+              linkedElementStyle(currentTheme, linkedList.key).titleContainer
+            }>
+            <View
+              style={linkedElementStyle(currentTheme, linkedList.key).title}>
+              <Icon
+                name={icons[linkedList.key]}
+                type={icons.type}
+                size={20}
+                color={
+                  currentTheme.colors[linkedList.key][
+                    themeFields.styles.secondaryColor
+                  ]
+                }
+              />
+              <Text
                 style={
-                  linkedElementStyle(currentTheme, linkedList.key).linkButton
+                  linkedElementStyle(currentTheme, linkedList.key).titleText
                 }>
-                <Icon
-                  name={icons.add}
-                  type={icons.type}
-                  size={20}
-                  color={
-                    currentTheme.colors[linkedList.key][
-                      themeFields.styles.secondaryColor
-                    ]
-                  }
-                />
-              </View>
-            </TouchableOpacity>
-            <View style={linkedElementStyle(currentTheme, linkedList.key).list}>
-              {linkedList.data.length > 0 ? (
-                linkedList.data.map(item => (
-                  <Text
-                    style={
-                      linkedElementStyle(currentTheme, linkedList.key).element
-                    }>
-                    {item}
-                  </Text>
-                ))
-              ) : (
+                {`${
+                  linkedList.data.length > 0 ? linkedList.data.length : ''
+                } Linked ${linkedList.key}${
+                  linkedList.data.length > 1 ? 's' : ''
+                }`}
+              </Text>
+            </View>
+            <View
+              style={
+                linkedElementStyle(currentTheme, linkedList.key).linkButton
+              }>
+              <Icon
+                name={icons.add}
+                type={icons.type}
+                size={20}
+                color={
+                  currentTheme.colors[linkedList.key][
+                    themeFields.styles.secondaryColor
+                  ]
+                }
+              />
+            </View>
+          </TouchableOpacity>
+          <View style={linkedElementStyle(currentTheme, linkedList.key).list}>
+            {linkedList.data.length > 0 ? (
+              linkedList.data.map(item => (
                 <Text
                   style={
                     linkedElementStyle(currentTheme, linkedList.key).element
                   }>
-                  {`No linked ${linkedList.key}`}
+                  {item}
                 </Text>
-              )}
-            </View>
+              ))
+            ) : (
+              <Text
+                style={
+                  linkedElementStyle(currentTheme, linkedList.key).element
+                }>
+                {`No linked ${linkedList.key}`}
+              </Text>
+            )}
           </View>
-        ),
-      )}
+        </View>
+      ))}
     </View>
   );
 };

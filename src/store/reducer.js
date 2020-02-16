@@ -4,6 +4,7 @@ import themeReducer from './themes/themes.reducer';
 import eventReducer from './event/event.reducer';
 import taskReducer from './task/task.reducer';
 import noteReducer from './note/note.reducer';
+import trashReducer from './task/trash.reducer';
 
 const rootReducer = () =>
   combineReducers({
@@ -12,6 +13,7 @@ const rootReducer = () =>
     event: eventReducer,
     task: taskReducer,
     note: noteReducer,
+    trash: trashReducer,
   });
 
 export default rootReducer;

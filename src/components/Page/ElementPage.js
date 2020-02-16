@@ -15,6 +15,8 @@ import {paths} from '../../config/routes';
 import {emptyNote} from '../../store/note/note.reducer';
 import {emptyTask} from '../../store/task/task.reducer';
 import {emptyEvent} from '../../store/event/event.reducer';
+import {deleteNote} from '../../store/note/note.actions';
+import {deleteTask} from '../../store/task/task.actions';
 
 const ElementPage = ({elementType, elements, children}) => {
   const params = useSelector(getPageParams);
@@ -39,14 +41,6 @@ const ElementPage = ({elementType, elements, children}) => {
 
   const onPressAddElement = () => {
     openIndividualElementPage(emptyElement[elementType]);
-  };
-
-  const onPressDeleteElement = () => {
-    closeIndividualElementPage();
-  };
-
-  const onPressEditElement = element => {
-    openIndividualElementPage(element);
   };
 
   const getSideMenu = type => {
@@ -83,8 +77,8 @@ const ElementPage = ({elementType, elements, children}) => {
   const editingContextualMenu = [
     {key: 'close', onPress: () => closeIndividualElementPage()},
     ...contextualMenu,
-    {key: 'delete', onPress: () => onPressDeleteElement()},
   ];
+
   useEffect(() => {
     dispatch(
       setContextualMenu(

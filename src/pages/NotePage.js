@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import {Text} from 'react-native';
 import {themeFields, icons} from '../config/style';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {getCurrentTheme} from '../store/themes/themes.selectors';
-import {getNotes} from '../store/note/note.selectors';
+import {getNotes, getCurrentNote} from '../store/note/note.selectors';
 import {StyleSheet} from 'react-native';
 import {emptyNote} from '../store/note/note.reducer';
 import {TextInput} from 'react-native';
@@ -12,31 +12,24 @@ import {TouchableOpacity} from 'react-native';
 import {Icon} from 'react-native-elements';
 import LinkedElements from '../components/LinkedElements/LinkedElements';
 import ElementPage from '../components/Page/ElementPage';
-import {getPageParams} from '../store/navigation/navigation.selectors';
+import {createOrUpdateNote} from '../store/note/note.actions';
 
 const NotePage = () => {
   const currentTheme = useSelector(getCurrentTheme);
-  const params = useSelector(getPageParams);
-  const [currentNote, setCurrentNote] = useState(
-    params && params.note ? params.note : emptyNote,
-  );
+  const currentNote = useSelector(getCurrentNote);
   const notes = useSelector(getNotes);
+  const dispatch = useDispatch();
 
   const onChangeTitle = ({nativeEvent}) => {
-    const updatedNote = {...currentNote, title: nativeEvent.text};
-    setCurrentNote(updatedNote);
+    dispatch(createOrUpdateNote({...currentNote, title: nativeEvent.text}));
   };
 
   const onChangeContent = ({nativeEvent}) => {
-    const updatedNote = {...currentNote, content: nativeEvent.text};
-    setCurrentNote(updatedNote);
+    dispatch(createOrUpdateNote({...currentNote, content: nativeEvent.text}));
   };
 
-  useEffect(() => {
-    if (params && params.note) {
-      setCurrentNote(params.note);
-    }
-  }, [params]);
+  const onChangeLinked = value => {};
+
   return (
     <ElementPage
       elementType={themeFields.items.note}
@@ -45,7 +38,7 @@ const NotePage = () => {
       <View style={notePageStyle(currentTheme).verticalInputContainer}>
         <Text style={notePageStyle(currentTheme).inputLabel}>Note title</Text>
         <TextInput
-          value={currentNote.title}
+          value={currentNote ? currentNote.title : ''}
           onChange={onChangeTitle}
           style={[notePageStyle(currentTheme).input, {flex: 5}]}
         />
@@ -54,7 +47,7 @@ const NotePage = () => {
         <Text style={notePageStyle(currentTheme).inputLabel}>Content</Text>
         <View style={notePageStyle(currentTheme).contentInputView}>
           <TextInput
-            value={currentNote.content}
+            value={currentNote ? currentNote.content : ''}
             multiline
             onChange={onChangeContent}
             style={[
@@ -65,7 +58,7 @@ const NotePage = () => {
           <TouchableOpacity
             style={notePageStyle(currentTheme).attachmentButton}>
             <Text style={notePageStyle(currentTheme).attachmentText}>
-              {currentNote.attachments ? currentNote.attachments.length : 0}
+              {(currentNote ? currentNote.attachments : []).length}
             </Text>
             <Icon
               name={icons.attachment}
@@ -80,7 +73,10 @@ const NotePage = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <LinkedElements element={currentNote} />
+      <LinkedElements
+        linked={currentNote ? currentNote.linked : []}
+        onChangeLinked={onChangeLinked}
+      />
     </ElementPage>
   );
 };
