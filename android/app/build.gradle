@@ -81,7 +81,7 @@ project.ext.react = [
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
-
+apply from: '../../node_modules/react-native-unimodules/gradle.groovy'
 /**
  * Set this to true to create two separate APKs instead of one:
  *   - An APK that only works on ARM devices
@@ -176,9 +176,14 @@ android {
 
         }
     }
+sourceSets { main { assets.srcDirs = ['src/main/assets', '../../assets'] } }
 }
 
 dependencies {
+      addUnimodulesDependencies()
+    implementation project(':react-native-fs')
+    implementation project(':react-native-webview')
+    implementation project(':react-native-static-server')
     implementation project(':react-native-reanimated')
     implementation project(':react-native-gesture-handler')
     implementation project(':react-native-vector-icons')

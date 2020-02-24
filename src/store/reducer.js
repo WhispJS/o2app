@@ -5,9 +5,11 @@ import eventReducer from './event/event.reducer';
 import taskReducer from './task/task.reducer';
 import noteReducer from './note/note.reducer';
 import trashReducer from './task/trash.reducer';
+import authReducer from './auth/auth.reducer';
 
 const rootReducer = () =>
   combineReducers({
+    auth: authReducer,
     navigation: navigationReducer,
     themes: themeReducer,
     event: eventReducer,

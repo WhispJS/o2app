@@ -45,7 +45,7 @@ const OrderList = ({onDragEnd, data}) => {
 const orderListStyle = (theme, type) => {
   return StyleSheet.create({
     container: {
-      height: 255,
+      height: 310,
     },
     listItem: {
       marginBottom: 5,

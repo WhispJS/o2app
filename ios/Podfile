@@ -40,6 +40,12 @@ target 'o2app' do
 
   pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
 
+  pod 'react-native-static-server', :path => '../node_modules/react-native-static-server'
+
+  pod 'react-native-webview', :path => '../node_modules/react-native-webview'
+
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+
   target 'o2appTests' do
     inherit! :search_paths
     # Pods for testing
