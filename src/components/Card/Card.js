@@ -15,6 +15,7 @@ import {goTo} from '../../store/navigation/navigation.actions';
 import {paths} from '../../config/routes';
 import {deleteNote} from '../../store/note/note.actions';
 import {deleteTask} from '../../store/task/task.actions';
+import {deleteElementForever} from '../../store/task/trash.actions';
 
 const Card = ({
   type,
@@ -25,6 +26,7 @@ const Card = ({
   optionalSideMenu = [],
   optionalTitleActions = [],
   element,
+  deleteIsPermanent,
 }) => {
   const currentSettings = useSelector(getCurrentSettings);
   const dispatch = useDispatch();
@@ -40,15 +42,20 @@ const Card = ({
     {
       key: 'delete',
       onPress: () => {
-        switch (type) {
-          case themeFields.items.note:
-            dispatch(deleteNote(element));
-            break;
-          case themeFields.items.task:
-            dispatch(deleteTask(element));
-            break;
-          case themeFields.items.event:
-            break;
+        if (deleteIsPermanent) {
+          console.log('Delete permanent');
+          dispatch(deleteElementForever(element));
+        } else {
+          switch (type) {
+            case themeFields.items.note:
+              dispatch(deleteNote(element));
+              break;
+            case themeFields.items.task:
+              dispatch(deleteTask(element));
+              break;
+            case themeFields.items.event:
+              break;
+          }
         }
       },
     },

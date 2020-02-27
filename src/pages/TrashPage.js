@@ -33,6 +33,7 @@ const TrashPage = () => {
             type={item.type}
             title={item.element.title}
             optionalSideMenu={getSideMenu(item.type)}
+            deleteIsPermanent
             element={item.element}>
             {item.element.content}
           </Card>
