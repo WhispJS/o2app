@@ -6,11 +6,13 @@ import taskReducer from './task/task.reducer';
 import noteReducer from './note/note.reducer';
 import trashReducer from './task/trash.reducer';
 import authReducer from './auth/auth.reducer';
+import peerReducer from './peer/peer.reducer';
 
 const rootReducer = () =>
   combineReducers({
     auth: authReducer,
     navigation: navigationReducer,
+    peer: peerReducer,
     themes: themeReducer,
     event: eventReducer,
     task: taskReducer,

@@ -63,8 +63,8 @@ const OrderCardList = ({data}) => {
           title={
             item.data.length
               ? `${currentNavIndexes[item.key] + 1}/${item.data.length} ${
-                  item.key
-                }${item.data.length > 1 ? 's' : ''}`
+                  item.data[currentNavIndexes[item.key]].title
+                }`
               : noDataText[item.key]
           }
           optionalActions={[
