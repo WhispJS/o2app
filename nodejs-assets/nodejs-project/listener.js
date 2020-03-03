@@ -9,6 +9,7 @@ const PeerId = require('peer-id');
 const PeerInfo = require('peer-info');
 const Node = require('./libp2p-bundle');
 const pipe = require('it-pipe');
+const lp = require('it-length-prefixed');
 
 async function run() {
   const listenerId = await PeerId.createFromJSON(require('./id-l'));
@@ -27,12 +28,22 @@ async function run() {
 
   // Handle incoming connections for the protocol by piping from the stream
   // back to itself (an echo)
-  await listenerNode.handle('/echo/1.0.0', ({stream}) =>
+  listenerNode.handle('/echo/1.0.0', async ({stream}) => {
     pipe(
+      // Read from the stream (the source)
       stream.source,
-      stream.sink,
-    ),
-  );
+      // Decode length-prefixed data
+      lp.decode(),
+      // Sink function
+      async function(source) {
+        // For each chunk of data
+        for await (const msg of source) {
+          // Output the data as a utf8 string
+          console.log('> ' + msg.toString('utf8').replace('\n', ''));
+        }
+      },
+    );
+  });
 
   // Start listening
   await listenerNode.start();

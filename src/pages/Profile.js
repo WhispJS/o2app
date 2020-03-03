@@ -28,9 +28,7 @@ const Profile = () => {
   useEffect(() => {
     startNodeServer();
     processFriendRequest();
-    if (!peerId) {
-      nodejs.channel.send(`/init/1.0.0/username/${userData.username}`);
-    }
+    nodejs.channel.send(`/init/1.0.0/username/${userData.username}`);
   }, []);
 
   const processFriendRequest = async () => {
@@ -62,7 +60,7 @@ const Profile = () => {
     nodejs.start('main.js');
     nodejs.channel.addListener('message', msg => {
       console.log('FROM SERVER: ' + msg);
-      //setMessage(msg);
+      setMessage(msg);
       //  if (msg.indexOf(IP4_PREFIX.server) > -1) {
       //    const multiaddresses = msg.split('\n');
       //    const ips = (multiaddresses || [])

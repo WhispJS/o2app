@@ -41,6 +41,7 @@
     "merge-options": "^2.0.0",
     "moving-average": "^1.0.0",
     "multiaddr": "^7.2.1",
+    "multihashes": "^0.4.15",
     "multistream-select": "^0.15.0",
     "mutable-proxy": "^1.0.0",
     "p-any": "^3.0.0",
