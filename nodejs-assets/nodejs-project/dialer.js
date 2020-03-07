@@ -31,7 +31,7 @@ async function run() {
   // Peer to Dial (the listener)
   const listenerPeerInfo = new PeerInfo(listenerId);
   const listenerMultiaddr =
-    '/ip4/100.106.38.231/tcp/10333/p2p/QmdzU4eJn22wQiVv7npWbYasRvhA2NwNFzyamv48R66tuH';
+    '/ip4/0.0.0.0/tcp/0/p2p/QmdzU4eJn22wQiVv7npWbYasRvhA2NwNFzyamv48R66tuH';
   listenerPeerInfo.multiaddrs.add(listenerMultiaddr);
   // Start the dialer libp2p node
   await dialerNode.start();

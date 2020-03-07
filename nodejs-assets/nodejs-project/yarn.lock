@@ -833,6 +833,17 @@ latency-monitor@~0.2.1:
     debug "^2.6.0"
     lodash "^4.17.4"
 
+libp2p-bootstrap@^0.10.4:
+  version "0.10.4"
+  resolved "https://registry.yarnpkg.com/libp2p-bootstrap/-/libp2p-bootstrap-0.10.4.tgz#dc87e7c10b7f2a5ae51683bdc1f1eeb36f02f1de"
+  integrity sha512-4FKLZzoXKM342eSPnUu3FcoZCqg8NA3283z92baebOCCjIb6nvM6Jn5LUWyo3dBwr2ntmLGOZvhYsGKII2oEcQ==
+  dependencies:
+    debug "^4.1.1"
+    mafmt "^7.0.0"
+    multiaddr "^7.2.1"
+    peer-id "^0.13.5"
+    peer-info "^0.17.0"
+
 libp2p-crypto-secp256k1@~0.4.0:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/libp2p-crypto-secp256k1/-/libp2p-crypto-secp256k1-0.4.1.tgz#b2bf77b3b9b2b30c8e052ffd6eacd5abaff9ea4d"
@@ -1478,7 +1489,7 @@ pathval@^1.1.0:
   resolved "https://registry.yarnpkg.com/pathval/-/pathval-1.1.0.tgz#b942e6d4bde653005ef6b71361def8727d0645e0"
   integrity sha1-uULm1L3mUwBe9rcTYd74cn0GReA=
 
-peer-id@^0.13.3, peer-id@^0.13.4, peer-id@^0.13.6, peer-id@~0.13.2, peer-id@~0.13.3, peer-id@~0.13.5:
+peer-id@^0.13.3, peer-id@^0.13.4, peer-id@^0.13.5, peer-id@^0.13.6, peer-id@~0.13.2, peer-id@~0.13.3, peer-id@~0.13.5:
   version "0.13.9"
   resolved "https://registry.yarnpkg.com/peer-id/-/peer-id-0.13.9.tgz#ae96a1b2e57e31d5e7179e4d6fb645b8facc47c2"
   integrity sha512-br1ehrrS2/6OK0NgWHi5l4X+avWW6leexsrT+4cALssyJQZbdJbsph3Xpmx/ei8AEvuDCnfW4VOoQKtxLd5N0Q==

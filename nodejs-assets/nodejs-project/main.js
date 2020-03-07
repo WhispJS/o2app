@@ -10,6 +10,8 @@ const pipe = require('it-pipe');
 const fs = require('fs');
 const lp = require('it-length-prefixed');
 var rn_bridge = require('rn-bridge');
+const all = require('it-all');
+const CID = require('cids');
 
 let username;
 const currentUserPeerInfo = async () => {
@@ -33,7 +35,7 @@ const currentUserPeerInfo = async () => {
   }
   // Listener libp2p node
   const peerInfo = new PeerInfo(peerId);
-  peerInfo.multiaddrs.add(`/ip4/0.0.0.0/tcp/10333/p2p/${peerId}`);
+  peerInfo.multiaddrs.add(`/ip4/0.0.0.0/tcp/0`);
   return {peerId, peerInfo};
 };
 
@@ -52,48 +54,66 @@ async function init() {
 async function dial(friendRequest) {
   const listenerId = PeerId.createFromB58String(friendRequest.peerId);
   const listenerPeerInfo = new PeerInfo(listenerId);
-  friendRequest.ips.forEach(ip => {
-    listenerPeerInfo.multiaddrs.add(
-      `/ip4/${ip}/tcp/10334/p2p/${listenerPeerInfo.id.toB58String()}`,
-    );
-  });
   const {peerInfo} = await currentUserPeerInfo();
+  peerInfo.multiaddrs.add('/ip4/0.0.0.0/tcp/0');
   const dialerNode = new Node({peerInfo});
-  rn_bridge.channel.send('Dialer ready');
-  dialerNode.peerInfo.multiaddrs.forEach(ma => {
-    rn_bridge.channel.send(
-      `${ma.toString()}/p2p/${dialerNode.peerInfo.id.toB58String()}`,
-    );
-  });
-  dialerNode.handle('/echo/1.0.0', async ({stream}) => {
-    pipe(
-      // Read from the stream (the source)
-      stream.source,
-      // Decode length-prefixed data
-      lp.decode(),
-      // Sink function
-      async function(source) {
-        // For each chunk of data
-        for await (const msg of source) {
-          // Output the data as a utf8 string
-          rn_bridge.channel.send('> ' + msg.toString('utf8').replace('\n', ''));
-        }
-      },
-    );
-  });
   await dialerNode.start();
-  const {stream} = await dialerNode.dialProtocol(
-    listenerPeerInfo,
-    '/echo/1.0.0',
+
+  rn_bridge.channel.send(
+    'Trying to find providers for :' + friendRequest.peerId,
   );
-  pipe(
-    // Source data
-    ['hey'],
-    // Write to the stream, and pass its output to the next function
-    lp.encode(),
-    // Sink function
-    stream.sink,
+  const cid = new CID(friendRequest.peerId);
+  const providers = await all(
+    dialerNode.contentRouting.findProviders(cid, {timeout: 3000}),
   );
+  rn_bridge.channel.send('Found provider:', providers[0].id.toB58String());
+  //  const peer = await dialerNode.peerRouting.findPeer(listenerPeerInfo.id);
+  //  rn_bridge.channel.send('Found it, multiaddrs are:');
+  //  peer.multiaddrs.forEach(ma => rn_bridge.channel.send(ma.toString()));
+  //  const listenerId = PeerId.createFromB58String(friendRequest.peerId);
+  //  const listenerPeerInfo = new PeerInfo(listenerId);
+  //  friendRequest.ips.forEach(ip => {
+  //    listenerPeerInfo.multiaddrs.add(
+  //      `/ip4/${ip}/tcp/10334/p2p/${listenerPeerInfo.id.toB58String()}`,
+  //    );
+  //  });
+  //  const {peerInfo} = await currentUserPeerInfo();
+  //  const dialerNode = new Node({peerInfo});
+  //  rn_bridge.channel.send('Dialer ready');
+  //  dialerNode.peerInfo.multiaddrs.forEach(ma => {
+  //    rn_bridge.channel.send(
+  //      `${ma.toString()}/p2p/${dialerNode.peerInfo.id.toB58String()}`,
+  //    );
+  //  });
+  //  dialerNode.handle('/echo/1.0.0', async ({stream}) => {
+  //    pipe(
+  //      // Read from the stream (the source)
+  //      stream.source,
+  //      // Decode length-prefixed data
+  //      lp.decode(),
+  //      // Sink function
+  //      async function(source) {
+  //        // For each chunk of data
+  //        for await (const msg of source) {
+  //          // Output the data as a utf8 string
+  //          rn_bridge.channel.send('> ' + msg.toString('utf8').replace('\n', ''));
+  //        }
+  //      },
+  //    );
+  //  });
+  //  await dialerNode.start();
+  //  const {stream} = await dialerNode.dialProtocol(
+  //    listenerPeerInfo,
+  //    '/echo/1.0.0',
+  //  );
+  //  pipe(
+  //    // Source data
+  //    ['hey'],
+  //    // Write to the stream, and pass its output to the next function
+  //    lp.encode(),
+  //    // Sink function
+  //    stream.sink,
+  //  );
 }
 const extractInfoFromMessage = (message, prefix) => {
   const parsedMessage = message.split('/');
