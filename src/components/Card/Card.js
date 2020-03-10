@@ -43,7 +43,6 @@ const Card = ({
       key: 'delete',
       onPress: () => {
         if (deleteIsPermanent) {
-          console.log('Delete permanent');
           dispatch(deleteElementForever(element));
         } else {
           switch (type) {
@@ -102,10 +101,10 @@ const Card = ({
               {titleActions.map(action => (
                 <TouchableOpacity
                   key={action.key}
-                  onPress={action.onPress}
+                  onPress={() => action.onPress(element)}
                   style={cardStyle(currentTheme, type).titleAction}>
                   <Icon
-                    name={icons[action.key]}
+                    name={icons[action.key(element)]}
                     type={icons.type}
                     size={20}
                     color={

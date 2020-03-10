@@ -21,7 +21,7 @@ import {Icon} from 'react-native-elements';
 import {View} from 'react-native';
 import moment from 'moment';
 
-const Clock = () => {
+const Clock = ({containerStyle}) => {
   const currentTheme = useSelector(getCurrentTheme);
   const currentSettings = useSelector(getCurrentSettings);
   const [time, setTime] = useState(moment().format(currentSettings.timeFormat));
@@ -40,9 +40,7 @@ const Clock = () => {
   }, [currentSettings]);
 
   return (
-    <TouchableOpacity
-      style={containerStyles(currentSettings, currentTheme).clock}
-      onPress={handleClickTime}>
+    <TouchableOpacity style={containerStyle} onPress={handleClickTime}>
       <View
         style={[
           containerStyles(currentSettings, currentTheme).clockPart,

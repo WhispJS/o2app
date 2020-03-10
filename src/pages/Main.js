@@ -15,10 +15,6 @@ const Main = () => {
   const events = useSelector(getEvents);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(removeContextMenu());
-  }, []);
-
   return (
     <Page theme={currentTheme}>
       <OrderCardList

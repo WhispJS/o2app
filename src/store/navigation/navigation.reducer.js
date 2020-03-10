@@ -15,11 +15,12 @@ const initialNavigationState = {
 const navigationReducer = (state = initialNavigationState, action) => {
   switch (action.type) {
     case GO_TO:
+      const newPage = action.payload.data ? action.payload.data : 'home';
       return {
         ...state,
-        currentPage: action.payload.data,
+        currentPage: newPage,
         params: action.payload.params,
-        history: [...state.history, action.payload.data],
+        history: [...state.history, newPage],
       };
     case GO_BACK:
       return {

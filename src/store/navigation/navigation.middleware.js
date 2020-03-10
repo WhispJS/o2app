@@ -2,6 +2,7 @@ import {GO_TO} from './navigation.actiontype';
 import {themeFields} from '../../config/style';
 import {updateCurrentNote} from '../note/note.actions';
 import {updateCurrentTask} from '../task/task.actions';
+import {removeContextMenu} from '../navigation/navigation.actions';
 
 const elementPages = [
   themeFields.items.task,
@@ -12,6 +13,7 @@ const navigationMiddleware = store => next => action => {
   switch (action.type) {
     case GO_TO:
       const path = action.payload.data;
+      store.dispatch(removeContextMenu());
       // If we are going to an element page, we want to set the current element according to params
       if (elementPages.includes(path)) {
         switch (path) {

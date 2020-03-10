@@ -11,9 +11,9 @@ export const paths = {
   home: 'home',
   settings: 'settings',
   profile: 'profile',
-  task: themeFields.items.task,
-  note: themeFields.items.note,
-  event: themeFields.items.event,
+  [themeFields.items.task]: themeFields.items.task,
+  [themeFields.items.note]: themeFields.items.note,
+  [themeFields.items.event]: themeFields.items.event,
   trash: 'trash',
 };
 

@@ -9,7 +9,7 @@ export const general = {
 
 export const icons = {
   type: 'font-awesome',
-  note: 'pencil',
+  note: 'book',
   task: 'check-square',
   event: 'calendar',
   settings: 'cog',
@@ -20,11 +20,11 @@ export const icons = {
   home: 'home',
   share: 'share-alt',
   copy: 'copy',
-  edit: 'wrench',
+  edit: 'pencil',
   add: 'plus',
   back: 'arrow-up',
   forward: 'arrow-down',
-  close: 'arrow-left',
+  close: 'save',
   attachment: 'paperclip',
   link: 'link',
   delete: 'trash',
@@ -194,14 +194,6 @@ export const containerStyles = (settings, theme) =>
       paddingLeft: settings.menuStyle === menuStyles.leftHanded ? 5 : 0,
       paddingRight: settings.menuStyle === menuStyles.rightHanded ? 5 : 0,
       paddingBottom: settings.menuStyle === menuStyles.neutral ? 5 : 0,
-    },
-    clock: {
-      flexDirection: 'row',
-      borderWidth: 1,
-      borderStyle: 'solid',
-      borderRadius: 8,
-      borderColor:
-        theme.colors[themeFields.items.general][themeFields.styles.mainColor],
     },
     clockPart: {
       flex: 1,

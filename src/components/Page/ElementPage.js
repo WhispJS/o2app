@@ -16,7 +16,7 @@ import {emptyNote} from '../../store/note/note.reducer';
 import {emptyTask} from '../../store/task/task.reducer';
 import {emptyEvent} from '../../store/event/event.reducer';
 import {deleteNote} from '../../store/note/note.actions';
-import {deleteTask} from '../../store/task/task.actions';
+import {switchStateTask} from '../../store/task/task.actions';
 
 const ElementPage = ({elementType, elements, children}) => {
   const params = useSelector(getPageParams);
@@ -29,9 +29,7 @@ const ElementPage = ({elementType, elements, children}) => {
   const dispatch = useDispatch();
 
   const openIndividualElementPage = element => {
-    dispatch(
-      goTo(paths[elementType], {[elementType]: element, isEditing: true}),
-    );
+    dispatch(goTo(elementType, {[elementType]: element, isEditing: true}));
     dispatch(setContextualMenu(editingContextualMenu));
   };
 
@@ -59,8 +57,8 @@ const ElementPage = ({elementType, elements, children}) => {
       case themeFields.items.task:
         titleActions = [
           {
-            key: 'done',
-            onPress: () => {},
+            key: task => (task.done ? 'done' : 'undone'),
+            onPress: task => dispatch(switchStateTask(task)),
           },
         ];
         break;
@@ -71,21 +69,21 @@ const ElementPage = ({elementType, elements, children}) => {
   const contextualMenu = [
     {
       key: 'add',
+      theme: 'other',
       onPress: () => onPressAddElement(),
     },
   ];
   const editingContextualMenu = [
-    {key: 'close', onPress: () => closeIndividualElementPage()},
+    {key: 'close', onPress: () => closeIndividualElementPage(), theme: 'other'},
     ...contextualMenu,
   ];
 
-  useEffect(() => {
-    dispatch(
-      setContextualMenu(
-        params.isEditing ? editingContextualMenu : contextualMenu,
-      ),
-    );
-  }, [params]);
+  useEffect(() => {}, [params]);
+  dispatch(
+    setContextualMenu(
+      params.isEditing ? editingContextualMenu : contextualMenu,
+    ),
+  );
 
   return (
     <Page theme={currentTheme}>

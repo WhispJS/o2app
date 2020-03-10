@@ -49,7 +49,6 @@ const Blockstack = ({authResponse}) => {
     });
     server.start().then(url => {
       setServerUrl(url);
-      console.log('server started on' + url);
     });
     return () => {
       if (server && server.isRunning()) {
@@ -61,12 +60,9 @@ const Blockstack = ({authResponse}) => {
   const parseUserData = async () => {
     const url = await Linking.getInitialURL();
     if (url && url.indexOf('userData') > -1 && url.indexOf('pubKey') > -1) {
-      console.log(url);
       const urlArgs = url.split('o2app://')[1].split('?');
-      console.log({urlArgs});
       const userData = JSON.parse(decodeURI(urlArgs[0].split('=')[1]));
       const pubKey = urlArgs[1].split('=')[1];
-      console.log(pubKey);
       dispatch(signIn(userData, pubKey));
     }
   };
