@@ -81,7 +81,11 @@ const SettingsPage = () => {
   const ThemePicker = ({style, themes}) => {
     return (
       <Picker
-        selectedValue={currentTheme ? userThemes.indexOf(currentTheme) : -1}
+        selectedValue={
+          currentTheme
+            ? themes.map(theme => theme.id).indexOf(currentTheme.id)
+            : -1
+        }
         style={[settingsStyle(currentTheme).picker, style]}
         onValueChange={value => onChangeTheme(value)}>
         {themes.map((theme, index) => (
@@ -94,9 +98,10 @@ const SettingsPage = () => {
   const themesContextualMenu = [
     {
       key: 'close',
+      theme: 'other',
       onPress: () => onEditThemePressed(false),
     },
-    {key: 'add', onPress: () => onAddThemePressed()},
+    {key: 'add', theme: 'other', onPress: () => onAddThemePressed()},
   ];
 
   return (

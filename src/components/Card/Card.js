@@ -15,12 +15,11 @@ import {goTo} from '../../store/navigation/navigation.actions';
 import {paths} from '../../config/routes';
 import {deleteNote} from '../../store/note/note.actions';
 import {deleteTask} from '../../store/task/task.actions';
-import {deleteElementForever} from '../../store/task/trash.actions';
 
 const Card = ({
   type,
   title,
-  optionalActions = [],
+  actions,
   children,
   multiple,
   optionalSideMenu = [],
@@ -29,36 +28,6 @@ const Card = ({
   deleteIsPermanent,
 }) => {
   const currentSettings = useSelector(getCurrentSettings);
-  const dispatch = useDispatch();
-  const actions = [
-    {key: 'share'},
-    {
-      key: 'edit',
-      onPress: () => {
-        dispatch(goTo(paths[type], {[type]: element, isEditing: true}));
-      },
-    },
-    ...optionalActions,
-    {
-      key: 'delete',
-      onPress: () => {
-        if (deleteIsPermanent) {
-          dispatch(deleteElementForever(element));
-        } else {
-          switch (type) {
-            case themeFields.items.note:
-              dispatch(deleteNote(element));
-              break;
-            case themeFields.items.task:
-              dispatch(deleteTask(element));
-              break;
-            case themeFields.items.event:
-              break;
-          }
-        }
-      },
-    },
-  ];
   const sideMenu = multiple
     ? optionalSideMenu
     : reorderData(
@@ -135,14 +104,20 @@ const Card = ({
                   (item.key === 'delete' || item.key === 'edit') && !element
                 }
                 onPress={item.onPress}>
-                <Icon
-                  name={icons[item.key]}
-                  type={icons.type}
-                  size={general.cardIconSize}
-                  color={
-                    currentTheme.colors[type][themeFields.styles.secondaryColor]
-                  }
-                />
+                {item.text ? (
+                  <Text>{item.text}</Text>
+                ) : (
+                  <Icon
+                    name={icons[item.key]}
+                    type={icons.type}
+                    size={general.cardIconSize}
+                    color={
+                      currentTheme.colors[type][
+                        themeFields.styles.secondaryColor
+                      ]
+                    }
+                  />
+                )}
               </TouchableOpacity>
             )}
           />

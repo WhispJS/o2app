@@ -15,8 +15,8 @@ import {paths} from '../../config/routes';
 import {emptyNote} from '../../store/note/note.reducer';
 import {emptyTask} from '../../store/task/task.reducer';
 import {emptyEvent} from '../../store/event/event.reducer';
-import {deleteNote} from '../../store/note/note.actions';
 import {switchStateTask} from '../../store/task/task.actions';
+import {elementPageActions} from '../../config/card-actions';
 
 const ElementPage = ({elementType, elements, children}) => {
   const params = useSelector(getPageParams);
@@ -108,6 +108,7 @@ const ElementPage = ({elementType, elements, children}) => {
               <Card
                 type={elementType}
                 title={item.title}
+                actions={elementPageActions(elementType, item, dispatch)}
                 optionalSideMenu={getSideMenu(elementType)}
                 optionalTitleActions={getTitleActions(elementType)}
                 element={item}>

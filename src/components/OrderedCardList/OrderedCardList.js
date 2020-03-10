@@ -7,21 +7,14 @@ import Card from '../Card/Card';
 import {reorderData} from '../../utils/reorder';
 import {goTo} from '../../store/navigation/navigation.actions';
 import {paths} from '../../config/routes';
-import {emptyNote} from '../../store/note/note.reducer';
 import {themeFields} from '../../config/style';
-import {emptyTask} from '../../store/task/task.reducer';
-import {emptyEvent} from '../../store/event/event.reducer';
+import {homeActions} from '../../config/card-actions';
 
 const OrderCardList = ({data}) => {
   const noDataText = {
     note: 'No note',
     event: 'No event',
     task: 'No task',
-  };
-  const emptyElement = {
-    [themeFields.items.note]: emptyNote,
-    [themeFields.items.task]: emptyTask,
-    [themeFields.items.event]: emptyEvent,
   };
   const currentSettings = useSelector(getCurrentSettings);
   const dispatch = useDispatch();
@@ -30,7 +23,6 @@ const OrderCardList = ({data}) => {
     note: 0,
     event: 0,
   });
-
   const onForwardPress = cardType => {
     if (
       currentNavIndexes[cardType] + 1 ===
@@ -67,18 +59,7 @@ const OrderCardList = ({data}) => {
                 }`
               : noDataText[item.key]
           }
-          optionalActions={[
-            {
-              key: 'add',
-              onPress: () =>
-                dispatch(
-                  goTo(paths[item.key], {
-                    [item.key]: emptyElement[item.key],
-                    isEditing: true,
-                  }),
-                ),
-            },
-          ]}
+          actions={homeActions(item.key, item.data, dispatch)}
           optionalSideMenu={[
             {key: 'back', onPress: () => onBackPress(item.key)},
             {key: 'forward', onPress: () => onForwardPress(item.key)},
