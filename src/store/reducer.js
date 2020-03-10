@@ -4,7 +4,7 @@ import themeReducer from './themes/themes.reducer';
 import eventReducer from './event/event.reducer';
 import taskReducer from './task/task.reducer';
 import noteReducer from './note/note.reducer';
-import trashReducer from './task/trash.reducer';
+import trashReducer from './trash/trash.reducer';
 import authReducer from './auth/auth.reducer';
 
 const rootReducer = () =>

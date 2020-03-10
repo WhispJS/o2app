@@ -1,6 +1,6 @@
 import {
   ADD_ELEMENT_TO_TRASH,
-  DELETE_ELEMENT_FOREVER,
+  EMPTY_TRASH,
   RESTORE_ELEMENT,
 } from '../trash/trash.actiontype';
 
@@ -12,18 +12,16 @@ const trashReducer = (state = initialTrashState, action) => {
   switch (action.type) {
     case ADD_ELEMENT_TO_TRASH:
       return {...state, elements: [...state.elements, action.payload.data]};
-    case DELETE_ELEMENT_FOREVER:
+    case EMPTY_TRASH:
       return {
         ...state,
-        elements: state.elements.filter(
-          element => element.element.id !== action.payload.data.id,
-        ),
+        elements: [],
       };
     case RESTORE_ELEMENT:
       return {
         ...state,
         elements: state.elements.filter(
-          element => element.element.id !== action.payload.data.id,
+          element => element.element.id !== action.payload.data.element.id,
         ),
       };
     default:

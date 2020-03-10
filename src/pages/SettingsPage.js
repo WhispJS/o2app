@@ -65,7 +65,7 @@ const SettingsPage = () => {
   };
 
   const onEditThemePressed = isEditing => {
-    dispatch(goTo(paths.settings, {isEditing: true}));
+    dispatch(goTo(paths.settings, {isEditing: isEditing}));
     if (isEditing) {
       dispatch(setContextualMenu(themesContextualMenu));
     } else {

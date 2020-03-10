@@ -42,7 +42,6 @@ const taskReducer = (state = initialTaskState, action) => {
     case UPDATE_CURRENT_TASK:
       return {...state, currentTask: action.payload.data};
     case SWITCH_STATE_TASK:
-      const taskState = action.payload.data;
       const switchedTask = {
         ...action.payload.data,
         done: !action.payload.data.done,
@@ -57,7 +56,6 @@ const taskReducer = (state = initialTaskState, action) => {
         tasks: result.elementList,
         currentTask: result.newElement,
       };
-      return state;
     case DELETE_TASK:
       return {
         ...state,

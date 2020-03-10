@@ -4,7 +4,7 @@ import themesMiddleware from './themes/themes.middleware';
 import noteMiddleware from './note/note.middleware';
 import eventMiddleware from './event/event.middleware';
 import taskMiddleware from './task/task.middleware';
-import trashMiddleware from './task/trash.middleware';
+import trashMiddleware from './trash/trash.middleware';
 import authMiddleware from './auth/auth.middleware';
 
 const rootMiddleware = () =>
