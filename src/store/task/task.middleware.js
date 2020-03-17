@@ -1,5 +1,6 @@
 import {RESTORE_ELEMENT} from '../trash/trash.actiontype';
-import {createOrUpdateTask} from '../task/task.actions';
+import {UPDATE_VERSION} from '../update/update.actiontypes';
+import {createOrUpdateTask, updateVersionTasks} from '../task/task.actions';
 import {themeFields} from '../../config/style';
 
 const taskMiddleware = store => next => action => {
@@ -8,6 +9,9 @@ const taskMiddleware = store => next => action => {
       if (action.payload.data.type === themeFields.items.task) {
         store.dispatch(createOrUpdateTask(action.payload.data.element));
       }
+      break;
+    case UPDATE_VERSION:
+      store.dispatch(updateVersionTasks(action.payload.version));
       break;
   }
   return next(action);

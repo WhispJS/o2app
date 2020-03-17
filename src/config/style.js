@@ -18,7 +18,7 @@ export const icons = {
   neutral: 'chevron-down',
   rightHanded: 'chevron-right',
   home: 'home',
-  share: 'share-alt',
+  share: 'send',
   copy: 'copy',
   edit: 'pencil',
   add: 'plus',
@@ -30,7 +30,9 @@ export const icons = {
   delete: 'trash',
   trash: 'trash',
   done: 'check-square-o',
+  checked: 'check-square-o',
   undone: 'square-o',
+  unchecked: 'square-o',
 };
 
 export const menuStyles = {

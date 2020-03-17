@@ -106,7 +106,7 @@ const SettingsPage = () => {
 
   return (
     <>
-      <Page theme={currentTheme}>
+      <Page>
         {params.isEditing ? (
           <>
             <Text style={settingsStyle(currentTheme).pageTitle}>

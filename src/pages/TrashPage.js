@@ -39,7 +39,7 @@ const TrashPage = () => {
   }, []);
 
   return (
-    <Page theme={currentTheme}>
+    <Page>
       <Text style={textStyles(currentTheme).general}>Trash</Text>
       <FlatList
         keyExtractor={item => `${item.type}${item.element.id}`}

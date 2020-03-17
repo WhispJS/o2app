@@ -6,10 +6,12 @@ import taskReducer from './task/task.reducer';
 import noteReducer from './note/note.reducer';
 import trashReducer from './trash/trash.reducer';
 import authReducer from './auth/auth.reducer';
+import updateReducer from './update/update.reducer';
 
 const rootReducer = () =>
   combineReducers({
     auth: authReducer,
+    update: updateReducer,
     navigation: navigationReducer,
     themes: themeReducer,
     event: eventReducer,

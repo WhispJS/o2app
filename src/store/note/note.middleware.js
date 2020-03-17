@@ -1,5 +1,10 @@
 import {RESTORE_ELEMENT} from '../trash/trash.actiontype';
-import {createOrUpdateNote} from '../note/note.actions';
+import {UPDATE_VERSION} from '../update/update.actiontypes';
+import {
+  createOrUpdateNote,
+  updateVersionNotes,
+  linkElementToNote,
+} from '../note/note.actions';
 import {themeFields} from '../../config/style';
 
 const noteMiddleware = store => next => action => {
@@ -8,6 +13,9 @@ const noteMiddleware = store => next => action => {
       if (action.payload.data.type === themeFields.items.note) {
         store.dispatch(createOrUpdateNote(action.payload.data.element));
       }
+      break;
+    case UPDATE_VERSION:
+      store.dispatch(updateVersionNotes(action.payload.version));
       break;
   }
   return next(action);

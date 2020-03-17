@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, FlatList} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {
@@ -15,6 +15,7 @@ import {goTo} from '../../store/navigation/navigation.actions';
 import {paths} from '../../config/routes';
 import {deleteNote} from '../../store/note/note.actions';
 import {deleteTask} from '../../store/task/task.actions';
+import LinkedListModal from '../Modal/LinkedListModal';
 
 const Card = ({
   type,
@@ -27,20 +28,46 @@ const Card = ({
   element,
   deleteIsPermanent,
 }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [linkedElementType, setLinkedElementType] = useState(
+    themeFields.items.note,
+  );
   const currentSettings = useSelector(getCurrentSettings);
+
+  const handleOpenLinkedElementsModal = type => {
+    setShowModal(true);
+    setLinkedElementType(type);
+  };
+
+  const handleCloseLinkedElementsModal = () => {
+    setShowModal(false);
+  };
+
   const sideMenu = multiple
     ? optionalSideMenu
     : reorderData(
         currentSettings.cardOrder,
         [
-          {key: themeFields.items.note, onPress: () => {}},
-          {key: themeFields.items.task, onPress: () => {}},
-          {key: themeFields.items.event, onPress: () => {}},
+          {
+            key: themeFields.items.note,
+            onPress: () =>
+              handleOpenLinkedElementsModal(themeFields.items.note),
+          },
+          {
+            key: themeFields.items.task,
+            onPress: () =>
+              handleOpenLinkedElementsModal(themeFields.items.task),
+          },
+          {
+            key: themeFields.items.event,
+            onPress: () =>
+              handleOpenLinkedElementsModal(themeFields.items.event),
+          },
           ...optionalSideMenu,
         ].map(menuItem => ({
           ...menuItem,
           text: `${
-            element.linked && element.linked[menuItem.key]
+            element.linked[menuItem.key]
               ? element.linked[menuItem.key].length
               : 0
           }`,
@@ -50,6 +77,12 @@ const Card = ({
   const currentTheme = useSelector(getCurrentTheme);
   return (
     <View style={cardStyle(currentTheme, type).container}>
+      <LinkedListModal
+        visible={showModal}
+        element={element}
+        linkType={linkedElementType}
+        handleCloseModal={handleCloseLinkedElementsModal}
+      />
       <View style={cardStyle(currentTheme, type).main}>
         <View style={cardStyle(currentTheme, type).titleContainer}>
           <View style={cardStyle(currentTheme, type).title}>

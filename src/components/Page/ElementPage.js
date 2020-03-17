@@ -86,7 +86,7 @@ const ElementPage = ({elementType, elements, children}) => {
   );
 
   return (
-    <Page theme={currentTheme}>
+    <Page>
       {params.isEditing ? (
         <ScrollView>
           <Text style={elementPageStyle(currentTheme).pageTitle}>

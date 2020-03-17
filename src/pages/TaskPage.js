@@ -53,7 +53,10 @@ const TaskPage = () => {
           />
         </View>
       </View>
-      <LinkedElements linked={currentTask ? currentTask.linked : []} />
+      <LinkedElements
+        linked={currentTask ? currentTask.linked : []}
+        elementType={themeFields.items.task}
+      />
     </ElementPage>
   );
 };

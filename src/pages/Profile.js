@@ -17,7 +17,7 @@ const Profile = () => {
     dispatch(signOut());
   };
   return (
-    <Page theme={currentTheme}>
+    <Page>
       <Text style={textStyles(currentTheme).general}>Profile</Text>
       <Text style={textStyles(currentTheme).general}>
         Decentralized ID = {userData.decentralizedID}

@@ -59,7 +59,11 @@ const OrderCardList = ({data}) => {
                 }`
               : noDataText[item.key]
           }
-          actions={homeActions(item.key, item.data, dispatch)}
+          actions={homeActions(
+            item.key,
+            item.data[currentNavIndexes[item.key]],
+            dispatch,
+          )}
           optionalSideMenu={[
             {key: 'back', onPress: () => onBackPress(item.key)},
             {key: 'forward', onPress: () => onForwardPress(item.key)},

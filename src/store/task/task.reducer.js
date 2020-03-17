@@ -4,19 +4,47 @@ import {
   UPDATE_CURRENT_TASK,
   DELETE_TASK,
   SWITCH_STATE_TASK,
+  LINK_ELEMENT_TO_TASK,
+  UNLINK_ELEMENT_TO_TASK,
+  UPDATE_VERSION_TASKS,
 } from './task.actiontype';
-import {createOrUpdateElements} from '../../utils/elementsOperations';
+import {
+  createOrUpdateElements,
+  createElementFromModel,
+} from '../../utils/elementsOperations';
 
-export const emptyTask = {
-  title: '',
-  content: '',
-  done: false,
-  linked: [
-    {key: themeFields.items.note, data: []},
-    {key: themeFields.items.event, data: []},
-    {key: themeFields.items.task, data: []},
+export const taskModel = {
+  version: '0.0',
+  name: themeFields.items.task,
+  fields: [
+    {name: 'title', required: true, default: ''},
+    {name: 'content', required: false, default: ''},
+    {name: 'done', required: true, default: false},
+    {
+      name: 'linked',
+      required: true,
+      fields: [
+        {
+          name: themeFields.items.note,
+          required: true,
+          default: [],
+        },
+        {
+          name: themeFields.items.task,
+          required: true,
+          default: [],
+        },
+        {
+          name: themeFields.items.event,
+          required: true,
+          default: [],
+        },
+      ],
+    },
   ],
 };
+
+export const emptyTask = createElementFromModel(taskModel);
 
 const initialTaskState = {
   tasks: [],
@@ -46,21 +74,59 @@ const taskReducer = (state = initialTaskState, action) => {
         ...action.payload.data,
         done: !action.payload.data.done,
       };
-      const result = createOrUpdateElements(
+      const resultSwitchState = createOrUpdateElements(
         state.tasks,
         switchedTask,
-        switchedTask.id,
       );
       return {
         ...state,
-        tasks: result.elementList,
-        currentTask: result.newElement,
+        tasks: resultSwitchState.elementList,
+        currentTask: resultSwitchState.newElement,
       };
     case DELETE_TASK:
       return {
         ...state,
         tasks: state.tasks.filter(task => task.id !== action.payload.data.id),
         currentTask: emptyTask,
+      };
+    case LINK_ELEMENT_TO_TASK:
+      const taskLink = {
+        ...action.payload.task,
+        linked: {
+          ...action.payload.task.linked,
+          [action.payload.type]: [
+            ...action.payload.task.linked[action.payload.type],
+            action.payload.element,
+          ],
+        },
+      };
+      const resultLink = createOrUpdateElements(state.tasks, taskLink);
+      return {
+        ...state,
+        tasks: resultLink.elementList,
+        currentTask: resultLink.newElement,
+      };
+    case UNLINK_ELEMENT_TO_TASK:
+      const taskUnlink = {
+        ...action.payload.task,
+        linked: {
+          ...action.payload.task.linked,
+          [action.payload.type]: action.payload.task.linked[
+            action.payload.type
+          ].filter(task => task.id !== action.payload.element.id),
+        },
+      };
+      const resultUnlink = createOrUpdateElements(state.tasks, taskUnlink);
+      return {
+        ...state,
+        tasks: resultUnlink.elementList,
+        currentTask: resultUnlink.newElement,
+      };
+    case UPDATE_VERSION_TASKS:
+      return {
+        ...state,
+        tasks: state.tasks.map(task => createElementFromModel(taskModel, task)),
+        currentTask: createElementFromModel(taskModel, state.currentTask),
       };
     default:
       return state;

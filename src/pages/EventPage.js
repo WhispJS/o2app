@@ -33,7 +33,10 @@ const EventPage = () => {
       elementType={themeFields.items.event}
       emptyElement={emptyEvent}
       elements={events}>
-      <LinkedElements element={currentEvent} />
+      <LinkedElements
+        element={currentEvent}
+        elementType={themeFields.items.event}
+      />
     </ElementPage>
   );
 };

@@ -29,7 +29,6 @@ const NotePage = () => {
   };
 
   const onChangeLinked = value => {};
-
   return (
     <ElementPage
       elementType={themeFields.items.note}
@@ -75,6 +74,7 @@ const NotePage = () => {
       </View>
       <LinkedElements
         linked={currentNote ? currentNote.linked : []}
+        elementType={themeFields.items.note}
         onChangeLinked={onChangeLinked}
       />
     </ElementPage>

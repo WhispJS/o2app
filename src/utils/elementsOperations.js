@@ -17,3 +17,35 @@ export const createOrUpdateElements = (elementList, newElement, id) => {
   }
   return returnedData;
 };
+
+export const createElementFromModel = (model, elementToUpdate) => {
+  let element = {};
+
+  model.fields.forEach(field => {
+    if (!field.fields) {
+      element = {
+        ...element,
+        [field.name]:
+          elementToUpdate && elementToUpdate[field.name]
+            ? elementToUpdate[field.name]
+            : field.default,
+      };
+    } else {
+      field.fields.forEach(fieldField => {
+        element = {
+          ...element,
+          [field.name]: {
+            ...element[field.name],
+            [fieldField.name]:
+              elementToUpdate &&
+              elementToUpdate[field.name] &&
+              elementToUpdate[field.name][fieldField.name]
+                ? elementToUpdate[field.name][fieldField.name]
+                : fieldField.default,
+          },
+        };
+      });
+    }
+  });
+  return element;
+};

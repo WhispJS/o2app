@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {useSelector} from 'react-redux';
+import LinkedModal from '../Modal/LinkedModal';
 import {
   getCurrentTheme,
   getCurrentSettings,
@@ -8,13 +9,22 @@ import {
 import Color from 'color';
 import {themeFields, icons} from '../../config/style';
 import {Icon} from 'react-native-elements';
-import {FlatList} from 'react-native';
 import {TouchableOpacity} from 'react-native';
-import {reorderData} from '../../utils/reorder';
 
-const LinkedElements = ({linked}) => {
+const LinkedElements = ({linked, elementType}) => {
   const currentTheme = useSelector(getCurrentTheme);
   const currentSettings = useSelector(getCurrentSettings);
+  const [showModal, setShowModal] = useState(false);
+  const [linkType, setLinkType] = useState();
+
+  const handleOpenModal = type => {
+    setShowModal(!showModal);
+    setLinkType(type);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(!showModal);
+  };
   return (
     <View>
       <Text
@@ -24,73 +34,82 @@ const LinkedElements = ({linked}) => {
         }>
         Linked elements
       </Text>
-      {reorderData(currentSettings.cardOrder, linked).map(linkedList => (
-        <View
-          style={linkedElementStyle(currentTheme, linkedList.key).container}>
-          <TouchableOpacity
-            style={
-              linkedElementStyle(currentTheme, linkedList.key).titleContainer
-            }>
-            <View
-              style={linkedElementStyle(currentTheme, linkedList.key).title}>
-              <Icon
-                name={icons[linkedList.key]}
-                type={icons.type}
-                size={20}
-                color={
-                  currentTheme.colors[linkedList.key][
-                    themeFields.styles.secondaryColor
-                  ]
-                }
-              />
-              <Text
-                style={
-                  linkedElementStyle(currentTheme, linkedList.key).titleText
-                }>
-                {`${
-                  linkedList.data.length > 0 ? linkedList.data.length : ''
-                } Linked ${linkedList.key}${
-                  linkedList.data.length > 1 ? 's' : ''
-                }`}
-              </Text>
-            </View>
-            <View
+      <LinkedModal
+        elementType={elementType}
+        linkType={linkType}
+        visible={showModal}
+        handleCloseModal={handleCloseModal}
+      />
+      {currentSettings.cardOrder
+        .map(type => ({key: type.key, data: linked[type.key]}))
+        .map(linkedList => (
+          <View
+            style={linkedElementStyle(currentTheme, linkedList.key).container}>
+            <TouchableOpacity
               style={
-                linkedElementStyle(currentTheme, linkedList.key).linkButton
-              }>
-              <Icon
-                name={icons.add}
-                type={icons.type}
-                size={20}
-                color={
-                  currentTheme.colors[linkedList.key][
-                    themeFields.styles.secondaryColor
-                  ]
-                }
-              />
-            </View>
-          </TouchableOpacity>
-          <View style={linkedElementStyle(currentTheme, linkedList.key).list}>
-            {linkedList.data.length > 0 ? (
-              linkedList.data.map(item => (
+                linkedElementStyle(currentTheme, linkedList.key).titleContainer
+              }
+              onPress={() => handleOpenModal(linkedList.key)}>
+              <View
+                style={linkedElementStyle(currentTheme, linkedList.key).title}>
+                <Icon
+                  name={icons[linkedList.key]}
+                  type={icons.type}
+                  size={20}
+                  color={
+                    currentTheme.colors[linkedList.key][
+                      themeFields.styles.secondaryColor
+                    ]
+                  }
+                />
+                <Text
+                  style={
+                    linkedElementStyle(currentTheme, linkedList.key).titleText
+                  }>
+                  {`${
+                    linkedList.data.length > 0 ? linkedList.data.length : ''
+                  } Linked ${linkedList.key}${
+                    linkedList.data.length > 1 ? 's' : ''
+                  }`}
+                </Text>
+              </View>
+              <View
+                style={
+                  linkedElementStyle(currentTheme, linkedList.key).linkButton
+                }>
+                <Icon
+                  name={icons.add}
+                  type={icons.type}
+                  size={20}
+                  color={
+                    currentTheme.colors[linkedList.key][
+                      themeFields.styles.secondaryColor
+                    ]
+                  }
+                />
+              </View>
+            </TouchableOpacity>
+            <View style={linkedElementStyle(currentTheme, linkedList.key).list}>
+              {linkedList.data.length > 0 ? (
+                linkedList.data.map(item => (
+                  <Text
+                    style={
+                      linkedElementStyle(currentTheme, linkedList.key).element
+                    }>
+                    {item.title}
+                  </Text>
+                ))
+              ) : (
                 <Text
                   style={
                     linkedElementStyle(currentTheme, linkedList.key).element
                   }>
-                  {item}
+                  {`No linked ${linkedList.key}`}
                 </Text>
-              ))
-            ) : (
-              <Text
-                style={
-                  linkedElementStyle(currentTheme, linkedList.key).element
-                }>
-                {`No linked ${linkedList.key}`}
-              </Text>
-            )}
+              )}
+            </View>
           </View>
-        </View>
-      ))}
+        ))}
     </View>
   );
 };
