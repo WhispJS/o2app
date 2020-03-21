@@ -1,43 +1,31 @@
 import React, {useState} from 'react';
-import {Text} from 'react-native';
-import {themeFields, icons} from '../config/style';
 import {useSelector} from 'react-redux';
 import {getCurrentTheme} from '../store/themes/themes.selectors';
 import {getEvents} from '../store/event/event.selectors';
 import {StyleSheet} from 'react-native';
 import {emptyEvent} from '../store/event/event.reducer';
-import {TextInput} from 'react-native';
-import {View} from 'react-native';
-import {TouchableOpacity} from 'react-native';
-import {Icon} from 'react-native-elements';
 import LinkedElements from '../components/LinkedElements/LinkedElements';
-import ElementPage from '../components/Page/ElementPage';
+import Page from '../components/Page/Page';
+import {Calendar, Agenda, CalendarList} from 'react-native-calendars';
+import {getPageParams} from '../store/navigation/navigation.selectors';
 
 const EventPage = () => {
+  const params = useSelector(getPageParams);
   const currentTheme = useSelector(getCurrentTheme);
-  const events = useSelector(getEvents);
-  const [currentEvent, setCurrentEvent] = useState(emptyEvent);
-
-  const onChangeTitle = ({nativeEvent}) => {
-    const updatedEvent = {...currentEvent, title: nativeEvent.text};
-    setCurrentEvent(updatedEvent);
-  };
-
-  const onChangeContent = ({nativeEvent}) => {
-    const updatedEvent = {...currentEvent, content: nativeEvent.text};
-    setCurrentEvent(updatedEvent);
-  };
+  // const events = useSelector(getEvents);
+  // const [currentEvent, setCurrentEvent] = useState(emptyEvent);
 
   return (
-    <ElementPage
-      elementType={themeFields.items.event}
-      emptyElement={emptyEvent}
-      elements={events}>
-      <LinkedElements
-        element={currentEvent}
-        elementType={themeFields.items.event}
-      />
-    </ElementPage>
+    <Page>
+      {params.isEditing ? (
+        <LinkedElements
+          element={currentEvent}
+          elementType={themeFields.items.event}
+        />
+      ) : (
+        <Agenda firstDay={1} />
+      )}
+    </Page>
   );
 };
 
