@@ -32,9 +32,11 @@ import {
 } from '../store/navigation/navigation.actions';
 import {paths} from '../config/routes';
 import {getPageParams} from '../store/navigation/navigation.selectors';
+import {getCurrentVersion} from '../store/update/update.selectors';
 
 const SettingsPage = () => {
   const params = useSelector(getPageParams);
+  const appVersion = useSelector(getCurrentVersion);
   const menuPositions = [
     {
       key: menuStyles.leftHanded,
@@ -123,6 +125,9 @@ const SettingsPage = () => {
         ) : (
           <>
             <Text style={settingsStyle(currentTheme).pageTitle}>Settings</Text>
+            <Text style={settingsStyle(currentTheme).header}>
+              App version: v{appVersion}
+            </Text>
             <ButtonGroupSettings
               header={
                 <Text style={settingsStyle(currentTheme).header}>

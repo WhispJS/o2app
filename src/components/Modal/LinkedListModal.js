@@ -11,28 +11,21 @@ import {themeFields} from '../../config/style';
 import {Text} from 'react-native';
 import {goTo} from '../../store/navigation/navigation.actions';
 import {paths} from '../../config/routes';
+import {emptyNote} from '../../store/note/note.reducer';
+import ModalListItem from './ModalListItem';
 
-const ElementListItem = ({element, linkType}) => {
+const LinkedListModal = ({
+  linkType = themeFields.items.note,
+  element = emptyNote,
+  visible = false,
+  handleCloseModal,
+}) => {
   const currentTheme = useSelector(getCurrentTheme);
   const dispatch = useDispatch();
 
-  const handleOpenElement = () => {
-    dispatch(goTo(paths[linkType], {[linkType]: element, isEditing: true}));
+  const handleOpenElement = elem => {
+    dispatch(goTo(paths[linkType], {[linkType]: elem, isEditing: true}));
   };
-
-  return (
-    <TouchableOpacity
-      onPress={handleOpenElement}
-      style={elementListItemStyle(currentTheme, linkType).container}>
-      <Text style={elementListItemStyle(currentTheme, linkType).titleText}>
-        {element.title}
-      </Text>
-    </TouchableOpacity>
-  );
-};
-
-const LinkedListModal = ({linkType, element, visible, handleCloseModal}) => {
-  const currentTheme = useSelector(getCurrentTheme);
   return (
     <BaseModal
       title={linkType}
@@ -41,8 +34,13 @@ const LinkedListModal = ({linkType, element, visible, handleCloseModal}) => {
       handleCloseModal={handleCloseModal}>
       <View style={linkModalStyle(currentTheme, linkType).container}>
         {element &&
+          element.linked &&
           element.linked[linkType].map(elem => (
-            <ElementListItem element={elem} linkType={linkType} />
+            <ModalListItem
+              type={linkType}
+              text={elem.title}
+              onPress={() => handleOpenElement(elem)}
+            />
           ))}
       </View>
     </BaseModal>

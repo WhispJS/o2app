@@ -47,24 +47,20 @@ export const emptyNote = createElementFromModel(noteModel);
 
 const initialNoteState = {
   notes: [],
-  currentId: 0,
   currentNote: emptyNote,
 };
 
 const noteReducer = (state = initialNoteState, action) => {
   switch (action.type) {
     case CREATE_OR_UPDATE_NOTE:
-      const id = action.payload.data.id ? state.currentId : state.currentId + 1;
       const {elementList, newElement} = createOrUpdateElements(
         state.notes,
         action.payload.data,
-        id,
       );
       return {
         ...state,
         notes: elementList,
         currentNote: newElement,
-        currentId: id,
       };
     case UPDATE_CURRENT_NOTE:
       return {...state, currentNote: action.payload.data};

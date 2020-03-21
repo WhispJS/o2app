@@ -54,15 +54,15 @@ const restoreAction = (type, element, dispatch) => ({
 });
 
 export const homeActions = (type, element, dispatch) => [
-  shareAction(type, element, dispatch),
-  editAction(type, element, dispatch),
-  deleteAction(type, element, dispatch),
   addAction(type, element, dispatch),
+  editAction(type, element, dispatch),
+  shareAction(type, element, dispatch),
+  deleteAction(type, element, dispatch),
 ];
 
 export const elementPageActions = (type, element, dispatch) => [
-  shareAction(type, element, dispatch),
   editAction(type, element, dispatch),
+  shareAction(type, element, dispatch),
   deleteAction(type, element, dispatch),
 ];
 

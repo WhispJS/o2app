@@ -18,6 +18,9 @@ const LinkedElements = ({linked, elementType}) => {
   const [linkType, setLinkType] = useState();
 
   const handleOpenModal = type => {
+    if (!type) {
+      return;
+    }
     setShowModal(!showModal);
     setLinkType(type);
   };

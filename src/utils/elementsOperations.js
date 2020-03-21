@@ -1,8 +1,10 @@
 export const createOrUpdateElements = (elementList, newElement, id) => {
   let returnedData = {elementList, newElement};
+  const uuid = require('react-native-uuid');
+  id = id ? id : uuid.v4();
   if (newElement.id) {
     // This is when the element is updated
-    if (elementList.filter(elem => elem.id, newElement.id).length > 0) {
+    if (elementList.filter(elem => elem.id === newElement.id).length > 0) {
       returnedData.elementList = elementList.map(element =>
         element.id === newElement.id ? newElement : element,
       );

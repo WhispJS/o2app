@@ -42,7 +42,7 @@ export const eventModel = {
 export const emptyEvent = createElementFromModel(eventModel);
 
 const initialEventState = {
-  events: [{id: 1, content: 'test', title: 'test'}],
+  events: [emptyEvent],
 };
 const eventReducer = (state = initialEventState, action) => {
   switch (action.type) {

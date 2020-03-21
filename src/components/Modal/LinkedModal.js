@@ -20,6 +20,13 @@ import BaseModal from './BaseModal';
 import {themeFields, icons} from '../../config/style';
 import {getCurrentTheme} from '../../store/themes/themes.selectors';
 import {Icon} from 'react-native-elements';
+import {emptyNote} from '../../store/note/note.reducer';
+import {emptyTask} from '../../store/task/task.reducer';
+import {emptyEvent} from '../../store/event/event.reducer';
+import ModalListItem from './ModalListItem';
+import {goTo} from '../../store/navigation/navigation.actions';
+import {paths} from '../../config/routes';
+import {createOrUpdateElements} from '../../utils/elementsOperations';
 
 const ElementListItem = ({element, linkType, elementType}) => {
   const currentTheme = useSelector(getCurrentTheme);
@@ -125,19 +132,17 @@ const ElementListItem = ({element, linkType, elementType}) => {
     }
   };
   return (
-    <TouchableOpacity
-      onPress={handleLinkElement}
-      style={elementListItemStyle(currentTheme, linkType).container}>
+    <ModalListItem
+      type={linkType}
+      text={element.title}
+      onPress={handleLinkElement}>
       <Icon
         name={isSelected ? icons.checked : icons.unchecked}
         type={icons.type}
         size={20}
         color={currentTheme.colors[linkType][themeFields.styles.secondaryColor]}
       />
-      <Text style={elementListItemStyle(currentTheme, linkType).titleText}>
-        {element.title}
-      </Text>
-    </TouchableOpacity>
+    </ModalListItem>
   );
 };
 
@@ -159,6 +164,16 @@ const LinkedModal = ({linkType, elementType, visible, handleCloseModal}) => {
     [themeFields.items.task]: currentTask,
     [themeFields.items.event]: currentEvent,
   };
+  const emptyElement = {
+    [themeFields.items.note]: emptyNote,
+    [themeFields.items.task]: emptyTask,
+    [themeFields.items.event]: emptyEvent,
+  };
+
+  const dispatch = useDispatch();
+
+  const handleCreateLinkedElement = () => {};
+
   return (
     <BaseModal
       title={linkType}
@@ -166,7 +181,7 @@ const LinkedModal = ({linkType, elementType, visible, handleCloseModal}) => {
       visible={visible}
       handleCloseModal={handleCloseModal}>
       <View style={linkModalStyle(currentTheme, linkType).container}>
-        {elements[linkType] &&
+        {linkType &&
           elements[linkType]
             .filter(element => element.id !== currentElement[elementType].id)
             .map(element => (
@@ -176,6 +191,11 @@ const LinkedModal = ({linkType, elementType, visible, handleCloseModal}) => {
                 linkType={linkType}
               />
             ))}
+        <ModalListItem
+          type={linkType}
+          text={`New ${linkType}`}
+          onPress={handleCreateLinkedElement}
+        />
       </View>
     </BaseModal>
   );
@@ -189,24 +209,5 @@ export const linkModalStyle = (theme, type) => {
     },
   });
 };
-export const elementListItemStyle = (theme, type) => {
-  return StyleSheet.create({
-    container: {
-      flex: 1,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      maxHeight: 50,
-      borderColor: theme.colors[type][themeFields.styles.secondaryColor],
-      backgroundColor: theme.colors[type][themeFields.styles.mainColor],
-      borderWidth: 1,
-      borderRadius: 8,
-      padding: 10,
-      marginBottom: 10,
-    },
-    titleText: {
-      color: theme.colors[type][themeFields.styles.secondaryColor],
-    },
-  });
-};
+
 export default LinkedModal;

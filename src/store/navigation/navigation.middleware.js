@@ -13,7 +13,10 @@ const navigationMiddleware = store => next => action => {
   switch (action.type) {
     case GO_TO:
       const path = action.payload.data;
-      store.dispatch(removeContextMenu());
+      //Remove context menu only if we went to a new page
+      if (store.getState().navigation.currentPage !== path) {
+        store.dispatch(removeContextMenu());
+      }
       // If we are going to an element page, we want to set the current element according to params
       if (elementPages.includes(path)) {
         switch (path) {

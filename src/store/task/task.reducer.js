@@ -48,24 +48,20 @@ export const emptyTask = createElementFromModel(taskModel);
 
 const initialTaskState = {
   tasks: [],
-  currentId: 0,
   currentTask: emptyTask,
 };
 
 const taskReducer = (state = initialTaskState, action) => {
   switch (action.type) {
     case CREATE_OR_UPDATE_TASK:
-      const id = action.payload.data.id ? state.currentId : state.currentId + 1;
       const {elementList, newElement} = createOrUpdateElements(
         state.tasks,
         action.payload.data,
-        id,
       );
       return {
         ...state,
         tasks: elementList,
         currentTask: newElement,
-        currentId: id,
       };
     case UPDATE_CURRENT_TASK:
       return {...state, currentTask: action.payload.data};
