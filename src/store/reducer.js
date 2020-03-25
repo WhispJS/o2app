@@ -1,12 +1,10 @@
 import {combineReducers} from 'redux';
 import navigationReducer from './navigation/navigation.reducer';
 import themeReducer from './themes/themes.reducer';
-import eventReducer from './event/event.reducer';
-import taskReducer from './task/task.reducer';
-import noteReducer from './note/note.reducer';
 import trashReducer from './trash/trash.reducer';
 import authReducer from './auth/auth.reducer';
 import updateReducer from './update/update.reducer';
+import elementReducer from './element/element.reducer';
 
 const rootReducer = () =>
   combineReducers({
@@ -14,9 +12,7 @@ const rootReducer = () =>
     update: updateReducer,
     navigation: navigationReducer,
     themes: themeReducer,
-    event: eventReducer,
-    task: taskReducer,
-    note: noteReducer,
+    elements: elementReducer,
     trash: trashReducer,
   });
 

@@ -11,7 +11,14 @@ export const initialTrashState = {
 const trashReducer = (state = initialTrashState, action) => {
   switch (action.type) {
     case ADD_ELEMENT_TO_TRASH:
-      return {...state, elements: [...state.elements, action.payload.data]};
+      const now = new Date();
+      const trashedElement = {
+        key: 'trashed-' + action.payload.element.id,
+        type: action.payload.type,
+        element: action.payload.element,
+        dateDeleted: now,
+      };
+      return {...state, elements: [...state.elements, trashedElement]};
     case EMPTY_TRASH:
       return {
         ...state,
@@ -21,7 +28,7 @@ const trashReducer = (state = initialTrashState, action) => {
       return {
         ...state,
         elements: state.elements.filter(
-          element => element.element.id !== action.payload.data.element.id,
+          element => element.element.id !== action.payload.element.id,
         ),
       };
     default:

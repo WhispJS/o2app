@@ -4,16 +4,16 @@ import {
   RESTORE_ELEMENT,
 } from '../trash/trash.actiontype';
 
-export const addElementToTrash = element => ({
+export const addElementToTrash = (element, type) => ({
   type: ADD_ELEMENT_TO_TRASH,
-  payload: {data: element},
+  payload: {element, type},
 });
 
 export const emptyTrash = () => ({
   type: EMPTY_TRASH,
 });
 
-export const restoreElement = element => ({
+export const restoreElement = (element, type) => ({
   type: RESTORE_ELEMENT,
-  payload: {data: element},
+  payload: {element, type},
 });

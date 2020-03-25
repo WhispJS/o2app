@@ -1,47 +1,49 @@
 import React from 'react';
 import BaseModal from './BaseModal';
-import {View, TouchableOpacity} from 'react-native';
-import {linkModalStyle, elementListItemStyle} from './LinkedModal';
+import {View} from 'react-native';
+import {linkModalStyle} from './LinkedModal';
 import {useSelector, useDispatch} from 'react-redux';
 import {getCurrentTheme} from '../../store/themes/themes.selectors';
-import {getCurrentNote} from '../../store/note/note.selectors';
-import {getCurrentTask} from '../../store/task/task.selectors';
-import {getCurrentEvent} from '../../store/event/event.selectors';
-import {themeFields} from '../../config/style';
-import {Text} from 'react-native';
-import {goTo} from '../../store/navigation/navigation.actions';
-import {paths} from '../../config/routes';
-import {emptyNote} from '../../store/note/note.reducer';
 import ModalListItem from './ModalListItem';
+import {emptyElement} from '../../store/element/element.reducer';
+import {getElementsForType} from '../../store/element/element.selectors';
+import {findById} from '../../store/element/element.service';
+import {viewAction} from '../../utils/actions';
+import {elementTypes} from '../../config/meta';
 
 const LinkedListModal = ({
-  linkType = themeFields.items.note,
-  element = emptyNote,
+  type = elementTypes.note,
+  element = emptyElement[elementTypes.note],
   visible = false,
   handleCloseModal,
 }) => {
+  // Selectors
   const currentTheme = useSelector(getCurrentTheme);
+  const elements = useSelector(getElementsForType(type));
+  const findElementById = findById(elements);
+
+  //Actions
   const dispatch = useDispatch();
 
-  const handleOpenElement = elem => {
-    dispatch(goTo(paths[linkType], {[linkType]: elem, isEditing: true}));
-  };
   return (
     <BaseModal
-      title={linkType}
-      type={linkType}
+      title={type}
+      type={type}
       visible={visible}
       handleCloseModal={handleCloseModal}>
-      <View style={linkModalStyle(currentTheme, linkType).container}>
+      <View style={linkModalStyle(currentTheme, type).container}>
         {element &&
           element.linked &&
-          element.linked[linkType].map(elem => (
-            <ModalListItem
-              type={linkType}
-              text={elem.title}
-              onPress={() => handleOpenElement(elem)}
-            />
-          ))}
+          element.linked[type].map(id => {
+            const elem = findElementById(id).element;
+            return (
+              <ModalListItem
+                type={type}
+                text={elem && elem.title}
+                onPress={viewAction(type, elem, dispatch).onPress}
+              />
+            );
+          })}
       </View>
     </BaseModal>
   );

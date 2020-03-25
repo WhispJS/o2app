@@ -46,6 +46,9 @@ target 'o2app' do
 
   pod 'RNFS', :path => '../node_modules/react-native-fs'
 
+
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
+
   target 'o2appTests' do
     inherit! :search_paths
     # Pods for testing

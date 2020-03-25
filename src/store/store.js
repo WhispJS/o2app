@@ -9,7 +9,7 @@ import {persistReducer, persistStore} from 'redux-persist';
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  blacklist: ['navigation'],
+  whitelist: ['auth', 'update', 'themes', 'elements', 'trash'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer());

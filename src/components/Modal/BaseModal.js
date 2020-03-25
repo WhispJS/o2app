@@ -1,17 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import {
-  TouchableOpacity,
-  Modal,
-  Text,
-  TouchableHighlight,
-  View,
-  Alert,
-  StyleSheet,
-} from 'react-native';
+import {TouchableOpacity, Modal, Text, View, StyleSheet} from 'react-native';
 import {getCurrentTheme} from '../../store/themes/themes.selectors';
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {Icon} from 'react-native-elements';
-import Page from '../../components/Page/Page';
 import {themeFields, icons} from '../../config/style';
 
 const BaseModal = ({title, type, children, visible, handleCloseModal}) => {
@@ -46,7 +37,7 @@ const BaseModal = ({title, type, children, visible, handleCloseModal}) => {
               type={icons.type}
               size={25}
               color={
-                currentTheme.colors[type ? type : 'other'][
+                currentTheme.colors[type ? type : themeFields.items.other][
                   themeFields.styles.secondaryColor
                 ]
               }

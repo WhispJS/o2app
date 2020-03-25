@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {View, Text, FlatList} from 'react-native';
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {
   getCurrentTheme,
   getCurrentSettings,
@@ -11,11 +11,8 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Icon} from 'react-native-elements';
 import Color from 'color';
 import {reorderData} from '../../utils/reorder';
-import {goTo} from '../../store/navigation/navigation.actions';
-import {paths} from '../../config/routes';
-import {deleteNote} from '../../store/note/note.actions';
-import {deleteTask} from '../../store/task/task.actions';
 import LinkedListModal from '../Modal/LinkedListModal';
+import {elementTypes} from '../../config/meta';
 
 const Card = ({
   type,
@@ -26,17 +23,18 @@ const Card = ({
   optionalSideMenu = [],
   optionalTitleActions = [],
   element,
-  deleteIsPermanent,
 }) => {
+  // State
   const [showModal, setShowModal] = useState(false);
-  const [linkedElementType, setLinkedElementType] = useState(
-    themeFields.items.note,
-  );
+  const [linkedElementType, setLinkedElementType] = useState(elementTypes.note);
+
+  // Selectors
   const currentSettings = useSelector(getCurrentSettings);
 
-  const handleOpenLinkedElementsModal = type => {
+  // Actions
+  const handleOpenLinkedElementsModal = modalType => {
     setShowModal(true);
-    setLinkedElementType(type);
+    setLinkedElementType(modalType);
   };
 
   const handleCloseLinkedElementsModal = () => {
@@ -49,19 +47,16 @@ const Card = ({
         currentSettings.cardOrder,
         [
           {
-            key: themeFields.items.note,
-            onPress: () =>
-              handleOpenLinkedElementsModal(themeFields.items.note),
+            key: elementTypes.note,
+            onPress: () => handleOpenLinkedElementsModal(elementTypes.note),
           },
           {
-            key: themeFields.items.task,
-            onPress: () =>
-              handleOpenLinkedElementsModal(themeFields.items.task),
+            key: elementTypes.task,
+            onPress: () => handleOpenLinkedElementsModal(elementTypes.task),
           },
           {
-            key: themeFields.items.event,
-            onPress: () =>
-              handleOpenLinkedElementsModal(themeFields.items.event),
+            key: elementTypes.event,
+            onPress: () => handleOpenLinkedElementsModal(elementTypes.event),
           },
           ...optionalSideMenu,
         ].map(menuItem => ({
@@ -80,7 +75,7 @@ const Card = ({
       <LinkedListModal
         visible={showModal}
         element={element}
-        linkType={linkedElementType}
+        type={linkedElementType}
         handleCloseModal={handleCloseLinkedElementsModal}
       />
       <View style={cardStyle(currentTheme, type).main}>

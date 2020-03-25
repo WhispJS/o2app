@@ -15,7 +15,7 @@ const initialNavigationState = {
 const navigationReducer = (state = initialNavigationState, action) => {
   switch (action.type) {
     case GO_TO:
-      const newPage = action.payload.data ? action.payload.data : 'home';
+      const newPage = action.payload.page ? action.payload.page : 'home';
       return {
         ...state,
         currentPage: newPage,
