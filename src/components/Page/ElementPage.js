@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {Text, FlatList, ScrollView} from 'react-native';
-import {textStyles, themeFields, icons, general} from '../../config/style';
+import {themeFields} from '../../config/style';
 import Page from './Page';
 import {useSelector, useDispatch} from 'react-redux';
 import {StyleSheet} from 'react-native';
@@ -12,53 +12,37 @@ import {
 import Card from '../Card/Card';
 import {getPageParams} from '../../store/navigation/navigation.selectors';
 import {paths} from '../../config/routes';
-import {emptyNote} from '../../store/note/note.reducer';
-import {emptyTask} from '../../store/task/task.reducer';
-import {emptyEvent} from '../../store/event/event.reducer';
-import {switchStateTask} from '../../store/task/task.actions';
 import {elementPageActions} from '../../config/card-actions';
+import {getElementsForType} from '../../store/element/element.selectors';
+import {addAction} from '../../utils/actions';
+import {task_switchState} from '../../store/element/element.actions';
+import {elementTypes} from '../../config/meta';
 
-const ElementPage = ({elementType, elements, children}) => {
+const ElementPage = ({type, children}) => {
+  // Selectors
   const params = useSelector(getPageParams);
-  const emptyElement = {
-    [themeFields.items.note]: emptyNote,
-    [themeFields.items.task]: emptyTask,
-    [themeFields.items.event]: emptyEvent,
-  };
+  const elements = useSelector(getElementsForType(type));
   const currentTheme = useSelector(getCurrentTheme);
-  const dispatch = useDispatch();
 
-  const openIndividualElementPage = element => {
-    dispatch(goTo(elementType, {[elementType]: element, isEditing: true}));
-    dispatch(setContextualMenu(editingContextualMenu));
-  };
-
-  const closeIndividualElementPage = () => {
-    dispatch(goTo(paths[elementType], {[elementType]: null, isEditing: false}));
-  };
-
-  const onPressAddElement = () => {
-    openIndividualElementPage(emptyElement[elementType]);
-  };
-
-  const getSideMenu = type => {
+  // Misc
+  const getSideMenu = () => {
     let sideMenu = [];
     switch (type) {
-      case themeFields.items.note:
+      case elementTypes.note:
         sideMenu = [{key: 'attachment', onPress: () => {}}];
         break;
     }
     return sideMenu;
   };
 
-  const getTitleActions = type => {
+  const getTitleActions = () => {
     let titleActions = [];
     switch (type) {
-      case themeFields.items.task:
+      case elementTypes.task:
         titleActions = [
           {
             key: task => (task.done ? 'done' : 'undone'),
-            onPress: task => dispatch(switchStateTask(task)),
+            onPress: task => dispatch(task_switchState(task)),
           },
         ];
         break;
@@ -70,47 +54,55 @@ const ElementPage = ({elementType, elements, children}) => {
     {
       key: 'add',
       theme: 'other',
-      onPress: () => onPressAddElement(),
+      onPress: () => addAction(type, dispatch).onPress(),
     },
   ];
+
   const editingContextualMenu = [
     {key: 'close', onPress: () => closeIndividualElementPage(), theme: 'other'},
     ...contextualMenu,
   ];
 
-  useEffect(() => {}, [params]);
-  dispatch(
-    setContextualMenu(
-      params.isEditing ? editingContextualMenu : contextualMenu,
-    ),
-  );
+  // Effects
+  useEffect(() => {
+    dispatch(
+      setContextualMenu(
+        params.isEditing ? editingContextualMenu : contextualMenu,
+      ),
+    );
+  }, [params]);
+
+  // Actions
+  const dispatch = useDispatch();
+
+  const closeIndividualElementPage = () => {
+    dispatch(goTo(paths[type], {isEditing: false}));
+  };
 
   return (
     <Page>
       {params.isEditing ? (
         <ScrollView>
           <Text style={elementPageStyle(currentTheme).pageTitle}>
-            {`Create ${elementType}`}
+            {`Create ${type}`}
           </Text>
           {children}
         </ScrollView>
       ) : (
         <>
           <Text
-            style={
-              elementPageStyle(currentTheme).pageTitle
-            }>{`${elementType}s`}</Text>
+            style={elementPageStyle(currentTheme).pageTitle}>{`${type}s`}</Text>
           <FlatList
             keyExtractor={item => `${item.id}`}
             data={elements}
             contentContainerStyle={elementPageStyle(currentTheme).content}
             renderItem={({item}) => (
               <Card
-                type={elementType}
+                type={type}
                 title={item.title}
-                actions={elementPageActions(elementType, item, dispatch)}
-                optionalSideMenu={getSideMenu(elementType)}
-                optionalTitleActions={getTitleActions(elementType)}
+                actions={elementPageActions(type, item, dispatch)}
+                optionalSideMenu={getSideMenu(type)}
+                optionalTitleActions={getTitleActions(type)}
                 element={item}>
                 {item.content}
               </Card>

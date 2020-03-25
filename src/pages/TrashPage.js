@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {Text, StyleSheet} from 'react-native';
-import {textStyles, themeFields} from '../config/style';
+import {textStyles} from '../config/style';
 import Page from '../components/Page/Page';
 import {useSelector, useDispatch} from 'react-redux';
 import {getCurrentTheme} from '../store/themes/themes.selectors';
@@ -10,6 +10,7 @@ import {FlatList} from 'react-native';
 import {trashActions} from '../config/card-actions';
 import {setContextualMenu} from '../store/navigation/navigation.actions';
 import {emptyTrash, restoreElement} from '../store/trash/trash.actions';
+import {elementTypes} from '../config/meta';
 
 const TrashPage = () => {
   const currentTheme = useSelector(getCurrentTheme);
@@ -27,7 +28,7 @@ const TrashPage = () => {
   const getSideMenu = type => {
     let sideMenu = [];
     switch (type) {
-      case themeFields.items.note:
+      case elementTypes.note:
         sideMenu = [{key: 'attachment', onPress: () => {}}];
         break;
     }
@@ -42,7 +43,7 @@ const TrashPage = () => {
     <Page>
       <Text style={textStyles(currentTheme).general}>Trash</Text>
       <FlatList
-        keyExtractor={item => `${item.type}${item.element.id}`}
+        keyExtractor={item => `${item.element.id}`}
         data={trashedElements}
         contentContainerStyle={trashPageStyle(currentTheme).content}
         renderItem={({item}) => (

@@ -8,7 +8,7 @@ import {
 export const goTo = (page, params) => {
   return {
     type: GO_TO,
-    payload: {data: page, params},
+    payload: {page, params},
   };
 };
 

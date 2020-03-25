@@ -1,36 +1,45 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {Text} from 'react-native';
-import {themeFields, icons} from '../config/style';
 import {useSelector, useDispatch} from 'react-redux';
 import {getCurrentTheme} from '../store/themes/themes.selectors';
-import {getTasks, getCurrentTask} from '../store/task/task.selectors';
 import {StyleSheet} from 'react-native';
-import {emptyTask} from '../store/task/task.reducer';
 import {TextInput} from 'react-native';
 import {View} from 'react-native';
 import LinkedElements from '../components/LinkedElements/LinkedElements';
 import ElementPage from '../components/Page/ElementPage';
-import {createOrUpdateTask} from '../store/task/task.actions';
+import {getCurrentElement} from '../store/element/element.selectors';
+import {createOrUpdateElement} from '../store/element/element.actions';
+import {themeFields} from '../config/style';
+import {elementTypes} from '../config/meta';
 
 const TaskPage = () => {
+  // Selectors
   const currentTheme = useSelector(getCurrentTheme);
-  const tasks = useSelector(getTasks);
-  const currentTask = useSelector(getCurrentTask);
+  const currentTask = useSelector(getCurrentElement);
+
+  // Actions
   const dispatch = useDispatch();
 
   const onChangeTitle = ({nativeEvent}) => {
-    dispatch(createOrUpdateTask({...currentTask, title: nativeEvent.text}));
+    dispatch(
+      createOrUpdateElement(
+        {...currentTask, title: nativeEvent.text},
+        elementTypes.task,
+      ),
+    );
   };
 
   const onChangeContent = ({nativeEvent}) => {
-    dispatch(createOrUpdateTask({...currentTask, content: nativeEvent.text}));
+    dispatch(
+      createOrUpdateElement(
+        {...currentTask, content: nativeEvent.text},
+        elementTypes.task,
+      ),
+    );
   };
 
   return (
-    <ElementPage
-      elementType={themeFields.items.task}
-      emptyElement={emptyTask}
-      elements={tasks}>
+    <ElementPage type={elementTypes.task}>
       <View style={taskPageStyle(currentTheme).verticalInputContainer}>
         <Text style={taskPageStyle(currentTheme).inputLabel}>Task title</Text>
         <TextInput
@@ -53,10 +62,7 @@ const TaskPage = () => {
           />
         </View>
       </View>
-      <LinkedElements
-        linked={currentTask ? currentTask.linked : []}
-        elementType={themeFields.items.task}
-      />
+      <LinkedElements linked={currentTask ? currentTask.linked : []} />
     </ElementPage>
   );
 };

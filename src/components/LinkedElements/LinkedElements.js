@@ -10,10 +10,13 @@ import Color from 'color';
 import {themeFields, icons} from '../../config/style';
 import {Icon} from 'react-native-elements';
 import {TouchableOpacity} from 'react-native';
+import {findById} from '../../store/element/element.service';
+import {getElements} from '../../store/element/element.selectors';
 
-const LinkedElements = ({linked, elementType}) => {
+const LinkedElements = ({linked}) => {
   const currentTheme = useSelector(getCurrentTheme);
   const currentSettings = useSelector(getCurrentSettings);
+  const elements = useSelector(getElements);
   const [showModal, setShowModal] = useState(false);
   const [linkType, setLinkType] = useState();
 
@@ -38,8 +41,7 @@ const LinkedElements = ({linked, elementType}) => {
         Linked elements
       </Text>
       <LinkedModal
-        elementType={elementType}
-        linkType={linkType}
+        type={linkType}
         visible={showModal}
         handleCloseModal={handleCloseModal}
       />
@@ -69,7 +71,7 @@ const LinkedElements = ({linked, elementType}) => {
                   style={
                     linkedElementStyle(currentTheme, linkedList.key).titleText
                   }>
-                  {`${
+                  {` ${
                     linkedList.data.length > 0 ? linkedList.data.length : ''
                   } Linked ${linkedList.key}${
                     linkedList.data.length > 1 ? 's' : ''
@@ -94,14 +96,18 @@ const LinkedElements = ({linked, elementType}) => {
             </TouchableOpacity>
             <View style={linkedElementStyle(currentTheme, linkedList.key).list}>
               {linkedList.data.length > 0 ? (
-                linkedList.data.map(item => (
-                  <Text
-                    style={
-                      linkedElementStyle(currentTheme, linkedList.key).element
-                    }>
-                    {item.title}
-                  </Text>
-                ))
+                linkedList.data.map(id => {
+                  const element = findById(elements[linkedList.key])(id)
+                    .element;
+                  return (
+                    <Text
+                      style={
+                        linkedElementStyle(currentTheme, linkedList.key).element
+                      }>
+                      {element.title}
+                    </Text>
+                  );
+                })
               ) : (
                 <Text
                   style={

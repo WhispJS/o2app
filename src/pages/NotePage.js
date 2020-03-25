@@ -1,39 +1,47 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {Text} from 'react-native';
 import {themeFields, icons} from '../config/style';
 import {useSelector, useDispatch} from 'react-redux';
 import {getCurrentTheme} from '../store/themes/themes.selectors';
-import {getNotes, getCurrentNote} from '../store/note/note.selectors';
 import {StyleSheet} from 'react-native';
-import {emptyNote} from '../store/note/note.reducer';
 import {TextInput} from 'react-native';
 import {View} from 'react-native';
 import {TouchableOpacity} from 'react-native';
 import {Icon} from 'react-native-elements';
 import LinkedElements from '../components/LinkedElements/LinkedElements';
 import ElementPage from '../components/Page/ElementPage';
-import {createOrUpdateNote} from '../store/note/note.actions';
+import {getCurrentElement} from '../store/element/element.selectors';
+import {createOrUpdateElement} from '../store/element/element.actions';
+import {elementTypes} from '../config/meta';
 
 const NotePage = () => {
+  // Selectors
   const currentTheme = useSelector(getCurrentTheme);
-  const currentNote = useSelector(getCurrentNote);
-  const notes = useSelector(getNotes);
+  const currentNote = useSelector(getCurrentElement);
+
+  //Actions
   const dispatch = useDispatch();
 
   const onChangeTitle = ({nativeEvent}) => {
-    dispatch(createOrUpdateNote({...currentNote, title: nativeEvent.text}));
+    dispatch(
+      createOrUpdateElement(
+        {...currentNote, title: nativeEvent.text},
+        elementTypes.note,
+      ),
+    );
   };
 
   const onChangeContent = ({nativeEvent}) => {
-    dispatch(createOrUpdateNote({...currentNote, content: nativeEvent.text}));
+    dispatch(
+      createOrUpdateElement(
+        {...currentNote, content: nativeEvent.text},
+        elementTypes.note,
+      ),
+    );
   };
 
-  const onChangeLinked = value => {};
   return (
-    <ElementPage
-      elementType={themeFields.items.note}
-      emptyElement={emptyNote}
-      elements={notes}>
+    <ElementPage type={elementTypes.note}>
       <View style={notePageStyle(currentTheme).verticalInputContainer}>
         <Text style={notePageStyle(currentTheme).inputLabel}>Note title</Text>
         <TextInput
@@ -72,11 +80,7 @@ const NotePage = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <LinkedElements
-        linked={currentNote ? currentNote.linked : []}
-        elementType={themeFields.items.note}
-        onChangeLinked={onChangeLinked}
-      />
+      <LinkedElements linked={currentNote ? currentNote.linked : []} />
     </ElementPage>
   );
 };

@@ -4,16 +4,16 @@ import Profile from '../pages/Profile';
 import TaskPage from '../pages/TaskPage';
 import NotePage from '../pages/NotePage';
 import EventPage from '../pages/EventPage';
-import {themeFields} from './style';
 import TrashPage from '../pages/TrashPage';
+import {elementTypes} from './meta';
 
 export const paths = {
   home: 'home',
   settings: 'settings',
   profile: 'profile',
-  [themeFields.items.task]: themeFields.items.task,
-  [themeFields.items.note]: themeFields.items.note,
-  [themeFields.items.event]: themeFields.items.event,
+  [elementTypes.task]: elementTypes.task,
+  [elementTypes.note]: elementTypes.note,
+  [elementTypes.event]: elementTypes.event,
   trash: 'trash',
 };
 
